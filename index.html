@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>TCOS — Registration Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/tabler-icons.min.css"/>
+<style>
+/* ─── Design tokens ──────────────────────── */
+:root {
+  /* Page */
+  --page:        #F5F0EB;
+  --surface:     #FFFFFF;
+  --surface2:    #FAF7F4;
+  --surface3:    #F0EBE4;
+
+  /* Brand red */
+  --red:         #C42020;
+  --red-dark:    #7A1212;
+  --red-mid:     #D93030;
+  --red-tint:    #FBF0F0;
+  --red-border:  #F0CBCB;
+
+  /* Stage gold */
+  --gold:        #9A6520;
+  --gold-mid:    #B97B30;
+  --gold-light:  #F5DDB0;
+  --gold-tint:   #FBF5E8;
+  --gold-border: #E8D0A0;
+
+  /* Text */
+  --ink:         #1E1A16;
+  --ink-mid:     #4A4540;
+  --ink-light:   #7A736B;
+  --ink-hint:    #B0A898;
+
+  /* Status */
+  --green:       #2E7D32; --green-tint: #EDF7EE; --green-border: #B8DDB9;
+  --amber:       #8A6000; --amber-tint: #FFF8E8; --amber-border: #E8D090;
+  --blue:        #1A5FA0; --blue-tint:  #EEF4FB; --blue-border:  #B8D0ED;
+  --rust:        #A03020; --rust-tint:  #FBF0EE; --rust-border:  #E8C0B8;
+
+  /* Borders */
+  --border:      #E8E2DA;
+  --border2:     #D8D0C6;
+
+  font-family: 'Inter', sans-serif;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
+
+/* ─── Dev toggle ──────────────────────────── */
+#devToggle {
+  position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 9999;
+  background: var(--red); color: #fff; border: none;
+  padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
+  cursor: pointer; box-shadow: 0 4px 16px rgba(196,32,32,.3);
+  font-family: 'Inter', sans-serif; transition: background .2s;
+  display: flex; align-items: center; gap: 6px;
+}
+#devToggle:hover { background: var(--red-dark); }
+#devBadge {
+  background: rgba(255,255,255,.25); padding: 1px 6px;
+  border-radius: 4px; font-size: 10px;
+}
+
+/* ══════════════════════════════════════════
+   NAV
+══════════════════════════════════════════ */
+.nav {
+  position: sticky; top: 0; z-index: 100; height: 56px;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.5rem;
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo-mark {
+  width: 34px; height: 34px; border-radius: 7px;
+  background: linear-gradient(135deg, var(--red-dark), var(--red-mid));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif; font-size: 15px;
+  font-weight: 700; color: var(--gold-light); flex-shrink: 0;
+}
+.nav-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; font-weight: 600; color: var(--ink);
+  letter-spacing: .02em;
+}
+.nav-brand span { color: var(--red); }
+.nav-right { display: flex; align-items: center; gap: 8px; }
+
+/* ─── Buttons ──────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 7px;
+  border: 1px solid var(--border2); background: var(--surface);
+  font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500;
+  color: var(--ink-mid); cursor: pointer; transition: all .16s;
+  text-decoration: none;
+}
+.btn:hover { background: var(--surface3); border-color: var(--border2); color: var(--ink); }
+
+.btn-primary {
+  background: var(--red); color: #fff; border-color: var(--red);
+}
+.btn-primary:hover { background: var(--red-dark); color: #fff; border-color: var(--red-dark); }
+
+.btn-gold {
+  background: var(--gold); color: #fff; border-color: var(--gold);
+  font-weight: 600;
+}
+.btn-gold:hover { background: var(--gold-mid); color: #fff; }
+
+.btn-block { width: 100%; justify-content: center; padding: 10px; font-size: 14px; }
+
+.btn-ghost {
+  background: transparent; border-color: var(--border);
+  color: var(--ink-light);
+}
+.btn-ghost:hover { background: var(--surface3); color: var(--ink); }
+
+/* ══════════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════════ */
+.app-main {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  min-height: calc(100vh - 56px);
+}
+
+.left-panel {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 1.1rem;
+  overflow-y: auto;
+  position: sticky; top: 56px;
+  height: calc(100vh - 56px);
+  display: flex; flex-direction: column; gap: .85rem;
+}
+
+.right-panel {
+  padding: 1.25rem;
+  overflow-y: auto;
+}
+
+/* ─── Section label ──────────────────────── */
+.slabel {
+  font-size: 10px; font-weight: 600; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--ink-hint);
+  margin-bottom: .5rem; display: flex; align-items: center; gap: 5px;
+}
+.slabel i { color: var(--gold); font-size: 12px; }
+
+/* ══════════════════════════════════════════
+   USER CARD
+══════════════════════════════════════════ */
+.user-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem;
+  position: relative; overflow: hidden;
+}
+.user-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  
+}
+.user-avatar-row { display: flex; align-items: center; gap: .75rem; margin-bottom: .7rem; }
+.user-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-mid) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif; font-size: 18px;
+  font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.user-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; font-weight: 600; color: var(--ink);
+  margin-bottom: 1px; line-height: 1.2;
+}
+.user-nick { font-size: 11px; color: var(--ink-light); }
+.user-meta { display: flex; flex-direction: column; gap: 4px; }
+.user-meta-row { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-mid); }
+.user-meta-row i { font-size: 13px; color: var(--gold); }
+.user-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: .65rem; }
+.tag {
+  font-size: 10px; padding: 2px 8px; border-radius: 20px;
+  background: var(--gold-tint); color: var(--gold);
+  border: 1px solid var(--gold-border);
+}
+
+/* ══════════════════════════════════════════
+   GUEST PANEL
+══════════════════════════════════════════ */
+.guest-panel {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem;
+  position: relative; overflow: hidden;
+}
+.guest-panel::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.guest-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 600; color: var(--ink);
+  margin-bottom: 3px;
+}
+.guest-sub { font-size: 12px; color: var(--ink-light); margin-bottom: .85rem; line-height: 1.55; }
+
+.tabs-mini { display: flex; gap: 4px; margin-bottom: .85rem; }
+.tab-mini {
+  flex: 1; padding: 6px; border-radius: 6px; text-align: center;
+  font-size: 12px; font-weight: 500; cursor: pointer;
+  background: var(--surface3); color: var(--ink-light);
+  border: 1px solid var(--border); transition: all .15s;
+}
+.tab-mini.active {
+  background: var(--red); color: #fff; border-color: var(--red);
+}
+
+/* ─── Forms ────────────────────────────────── */
+.mini-form { display: flex; flex-direction: column; gap: .45rem; }
+.form-label { font-size: 11px; color: var(--ink-mid); margin-bottom: 2px; display: block; }
+.form-input, .form-select, .form-textarea {
+  width: 100%; border: 1px solid var(--border2);
+  background: var(--surface); border-radius: 6px;
+  padding: 7px 10px; font-size: 13px;
+  font-family: 'Inter', sans-serif; color: var(--ink);
+  outline: none; transition: border-color .15s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--gold); }
+.form-input::placeholder { color: var(--ink-hint); }
+.form-input[readonly] { background: var(--surface3); color: var(--ink-light); cursor: default; }
+.form-textarea { resize: none; height: 68px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: .45rem; }
+.form-group { display: flex; flex-direction: column; gap: 3px; }
+.form-group.full { grid-column: 1/-1; }
+
+/* ── Guest perks teaser ──────────────────── */
+.perk-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--ink-mid); margin-bottom: .4rem;
+}
+.perk-item i { color: var(--gold); font-size: 14px; flex-shrink: 0; }
+
+/* ══════════════════════════════════════════
+   QR CARD
+══════════════════════════════════════════ */
+.qr-card {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; padding: .9rem; text-align: center;
+}
+.qr-box {
+  width: 92px; height: 92px; margin: 0 auto .5rem;
+  background: #fff; border-radius: 6px; border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+}
+.qr-box svg { width: 80px; height: 80px; }
+.qr-id { font-size: 10px; color: var(--ink-hint); font-family: monospace; margin-bottom: .45rem; }
+.btn-qr {
+  display: inline-flex; align-items: center; gap: 5px;
+  border: 1px solid var(--border2); background: var(--surface);
+  padding: 4px 11px; border-radius: 6px; font-size: 11px;
+  cursor: pointer; color: var(--ink-mid);
+  font-family: 'Inter', sans-serif; transition: all .15s;
+}
+.btn-qr:hover { background: var(--surface3); color: var(--ink); }
+
+/* ══════════════════════════════════════════
+   MY EVENTS
+══════════════════════════════════════════ */
+.my-events { display: flex; flex-direction: column; gap: .38rem; }
+.my-event-item {
+  display: flex; gap: 9px; align-items: flex-start;
+  padding: .6rem .7rem; border: 1px solid var(--border);
+  border-radius: 8px; cursor: pointer; background: var(--surface);
+  transition: all .15s;
+}
+.my-event-item:hover { border-color: var(--border2); background: var(--surface2); }
+.sdot { width: 7px; height: 7px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+.sdot-up { background: var(--gold-mid); }
+.sdot-ok { background: var(--green); }
+.sdot-no { background: var(--rust); }
+.mei-info { flex: 1; min-width: 0; }
+.mei-name {
+  font-size: 12px; font-weight: 500; color: var(--ink);
+  margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.mei-date { font-size: 11px; color: var(--ink-light); }
+.sbadge {
+  font-size: 10px; padding: 2px 6px; border-radius: 20px;
+  flex-shrink: 0; white-space: nowrap; border: 1px solid;
+}
+.sbadge-up { background: var(--amber-tint); color: var(--amber); border-color: var(--amber-border); }
+.sbadge-ok { background: var(--green-tint); color: var(--green); border-color: var(--green-border); }
+.sbadge-no { background: var(--rust-tint);  color: var(--rust);  border-color: var(--rust-border);  }
+
+/* ══════════════════════════════════════════
+   HERO BANNER
+══════════════════════════════════════════ */
+.hero-banner {
+  border-radius: 14px; overflow: hidden; margin-bottom: 1.1rem;
+  position: relative; height: 152px;
+  display: flex; align-items: flex-end; padding: 1.15rem;
+  cursor: pointer; border: 1px solid var(--border);
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(120deg, #2A0808 0%, #6A1010 45%, #B82020 80%, #D93030 100%);
+}
+.hero-curtain-l, .hero-curtain-r {
+  position: absolute; top: 0; bottom: 0; width: 80px;
+  background: linear-gradient(135deg, #7A1212, #3A0808);
+  opacity: .9;
+}
+.hero-curtain-l { left: 0; clip-path: polygon(0 0,100% 0,65% 100%,0 100%); }
+.hero-curtain-r { right: 0; clip-path: polygon(35% 0,100% 0,100% 100%,0 100%); }
+.hero-glow {
+  position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
+  width: 260px; height: 190px;
+  background: radial-gradient(ellipse at top, rgba(245,221,176,.15) 0%, transparent 65%);
+}
+.hero-content { position: relative; z-index: 1; }
+.hero-eyebrow {
+  font-size: 10px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--gold-light);
+  margin-bottom: .3rem; display: flex; align-items: center; gap: 5px;
+}
+.hero-eyebrow i { font-size: 11px; }
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px; font-weight: 700; color: #fff;
+  line-height: 1.15; margin-bottom: .35rem;
+}
+.hero-title em { color: var(--gold-light); font-style: italic; }
+.hero-meta { font-size: 12px; color: rgba(255,255,255,.6); display: flex; gap: 14px; flex-wrap: wrap; }
+.hero-meta span { display: flex; align-items: center; gap: 4px; }
+.hero-meta i { font-size: 12px; color: var(--gold-light); }
+.hero-price-tag {
+  position: absolute; right: 1.15rem; top: 50%; transform: translateY(-50%); z-index: 1;
+  text-align: center; background: rgba(0,0,0,.35); border-radius: 8px;
+  padding: .5rem .75rem; border: 1px solid rgba(245,221,176,.25);
+}
+.hero-price-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px; font-weight: 700; color: var(--gold-light); line-height: 1;
+}
+.hero-price-sub { font-size: 10px; color: rgba(255,255,255,.5); }
+
+/* ─── Banner strip ────────────────────────── */
+.banner-strip {
+  display: flex; gap: .65rem; overflow-x: auto; padding-bottom: 4px;
+  margin-bottom: 1.1rem;
+}
+.banner-strip::-webkit-scrollbar { height: 3px; }
+.banner-card {
+  flex-shrink: 0; width: 176px; height: 76px;
+  border-radius: 10px; overflow: hidden; cursor: pointer;
+  border: 1px solid var(--border); transition: transform .2s;
+  position: relative; display: flex; align-items: center; justify-content: center;
+}
+.banner-card:hover { transform: scale(1.02); }
+.banner-inner {
+  width: 100%; height: 100%; display: flex; flex-direction: column;
+  align-items: flex-start; justify-content: flex-end; padding: .6rem;
+}
+.bc1 { background: linear-gradient(135deg, #F5EDE0, #E8D5B8); }
+.bc2 { background: linear-gradient(135deg, #EAF2E8, #C8DFC5); }
+.bc3 { background: linear-gradient(135deg, #E8EEF8, #C0CFE8); }
+.bc4 { background: linear-gradient(135deg, #F5F0E0, #E8D890); }
+.banner-label {
+  font-size: 12px; font-weight: 600; color: var(--ink); line-height: 1.25;
+  font-family: 'Cormorant Garamond', serif;
+}
+.banner-tag {
+  font-size: 9px; font-weight: 600; padding: 2px 6px;
+  border-radius: 4px; background: rgba(0,0,0,.12); color: var(--ink-mid);
+  margin-bottom: 3px; display: inline-block;
+}
+
+/* ─── Section heading ─────────────────────── */
+.sec-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: .75rem; }
+.sec-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 21px; font-weight: 600; color: var(--ink);
+}
+.sec-title em { color: var(--red); font-style: italic; }
+
+/* ─── Filter bar ──────────────────────────── */
+.filter-bar { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: .9rem; }
+.filter-btn {
+  border: 1px solid var(--border2); background: var(--surface);
+  padding: 4px 13px; border-radius: 20px; font-size: 12px; font-weight: 500;
+  cursor: pointer; color: var(--ink-light); font-family: 'Inter', sans-serif;
+  transition: all .15s;
+}
+.filter-btn.active { background: var(--red); color: #fff; border-color: var(--red); }
+.filter-btn:hover:not(.active) { background: var(--surface3); color: var(--ink); }
+
+/* ══════════════════════════════════════════
+   RECOMMENDED STRIP
+══════════════════════════════════════════ */
+.rec-strip {
+  display: flex; gap: .65rem; overflow-x: auto; padding-bottom: 4px; margin-bottom: 1.1rem;
+}
+.rec-strip::-webkit-scrollbar { height: 3px; }
+.rec-card {
+  flex-shrink: 0; width: 190px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 11px; overflow: hidden; cursor: pointer; transition: all .2s;
+}
+.rec-card:hover { border-color: var(--gold-border); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+.rec-poster {
+  height: 100px; display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.rec-poster-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.18); font-size: 18px;
+}
+.rec-poster-icon i { font-size: 20px; color: rgba(255,255,255,.85); }
+.rec-hot {
+  position: absolute; top: 7px; right: 7px;
+  font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 4px;
+  background: var(--red); color: #fff;
+}
+.rec-body { padding: .6rem; }
+.rec-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px; font-weight: 600; color: var(--ink);
+  margin-bottom: 2px; line-height: 1.25;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.rec-sub { font-size: 10px; color: var(--ink-light); }
+
+/* ══════════════════════════════════════════
+   EVENT GRID
+══════════════════════════════════════════ */
+.events-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(215px,1fr)); gap: .85rem;
+}
+.event-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; cursor: pointer;
+  transition: all .2s;
+}
+.event-card:hover {
+  border-color: var(--border2); transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,.07);
+}
+
+/* Poster gradients — muted, warm */
+.event-poster {
+  height: 126px; position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.poster-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: rgba(255,255,255,.18);
+  display: flex; align-items: center; justify-content: center;
+}
+.poster-icon i { font-size: 24px; color: rgba(255,255,255,.8); }
+.p1 { background: linear-gradient(135deg, #5A1010 0%, #A02020 100%); }
+.p2 { background: linear-gradient(135deg, #0E3020 0%, #1A5535 100%); }
+.p3 { background: linear-gradient(135deg, #1A1030 0%, #3A2060 100%); }
+.p4 { background: linear-gradient(135deg, #0A1830 0%, #1A3060 100%); }
+.p5 { background: linear-gradient(135deg, #402000 0%, #7A4010 100%); }
+.p6 { background: linear-gradient(135deg, #3A000C 0%, #780018 100%); }
+.p7 { background: linear-gradient(135deg, #00282A 0%, #005055 100%); }
+
+.ev-badge {
+  position: absolute; top: 8px; right: 8px;
+  font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 5px;
+  border: 1px solid;
+}
+.eb-free { background: var(--green-tint); color: var(--green); border-color: var(--green-border); }
+.eb-paid { background: var(--amber-tint); color: var(--amber); border-color: var(--amber-border); }
+.eb-full { background: var(--rust-tint);  color: var(--rust);  border-color: var(--rust-border);  }
+
+.event-body { padding: .78rem; }
+.event-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px; font-weight: 600; color: var(--ink);
+  line-height: 1.3; margin-bottom: .4rem;
+}
+.event-meta { display: flex; flex-direction: column; gap: 3px; margin-bottom: .6rem; }
+.emr { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--ink-light); }
+.emr i { font-size: 12px; color: var(--gold); }
+.event-footer { display: flex; align-items: center; gap: 8px; }
+.seat-wrap { flex: 1; }
+.seat-label { font-size: 10px; color: var(--ink-hint); margin-bottom: 3px; }
+.seat-bar { height: 3px; background: var(--surface3); border-radius: 2px; overflow: hidden; }
+.seat-fill { height: 100%; border-radius: 2px; background: var(--gold-mid); }
+.seat-fill-hi { background: var(--rust); }
+
+.btn-reg {
+  border: 1px solid var(--border2); background: transparent;
+  padding: 5px 11px; border-radius: 6px; font-size: 11px; font-weight: 500;
+  cursor: pointer; color: var(--ink-light);
+  font-family: 'Inter', sans-serif; white-space: nowrap; transition: all .15s;
+}
+.btn-reg:hover { background: var(--red); color: #fff; border-color: var(--red); }
+.btn-reg-done { background: var(--green-tint); color: var(--green); border: 1px solid var(--green-border); cursor: default; }
+.btn-reg-done:hover { background: var(--green-tint); color: var(--green); }
+.btn-reg-full { color: var(--ink-hint); border-color: var(--border); cursor: not-allowed; }
+.btn-reg-full:hover { background: transparent; color: var(--ink-hint); border-color: var(--border); }
+
+/* ══════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(30,26,22,.55);
+  backdrop-filter: blur(6px); z-index: 200;
+  display: none; align-items: flex-start; justify-content: center;
+  padding: 1.5rem 1rem; overflow-y: auto;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; width: 100%; max-width: 620px; margin: auto;
+  overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.15);
+}
+.modal-poster {
+  height: 180px; position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-poster-icon {
+  width: 56px; height: 56px; border-radius: 12px;
+  background: rgba(255,255,255,.18);
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-poster-icon i { font-size: 30px; color: rgba(255,255,255,.85); }
+.modal-close {
+  position: absolute; top: 12px; right: 12px;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: rgba(0,0,0,.4); border: none; cursor: pointer;
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; transition: background .15s;
+}
+.modal-close:hover { background: var(--red); }
+.modal-pills {
+  position: absolute; bottom: 10px; left: 12px; display: flex; gap: 5px;
+}
+.mpill {
+  font-size: 11px; padding: 3px 8px; border-radius: 5px;
+  background: rgba(0,0,0,.5); color: rgba(255,255,255,.8);
+}
+.mpill-gold { color: var(--gold-light); }
+
+.modal-body { padding: 1.35rem; }
+.modal-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 23px; font-weight: 700; color: var(--ink); margin-bottom: .3rem;
+}
+.modal-desc { font-size: 13px; color: var(--ink-mid); line-height: 1.65; margin-bottom: 1.1rem; }
+
+.modal-stats {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: .6rem; margin-bottom: 1.1rem;
+}
+.stat-card {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; padding: .65rem; text-align: center;
+}
+.stat-val { font-size: 20px; font-weight: 600; color: var(--ink); margin-bottom: 1px; }
+.stat-key { font-size: 10px; color: var(--ink-hint); }
+
+.msection { margin-bottom: 1rem; }
+.msection-title {
+  font-size: 10px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--ink-hint); margin-bottom: .5rem; display: flex; align-items: center; gap: 5px;
+}
+.msection-title i { color: var(--gold); }
+
+.sched-row {
+  display: flex; gap: .65rem; align-items: flex-start; padding: .65rem;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; margin-bottom: .38rem;
+}
+.sched-date {
+  background: var(--red-dark); color: #fff; border-radius: 5px;
+  padding: 3px 8px; font-size: 10px; font-weight: 600;
+  text-align: center; flex-shrink: 0; min-width: 52px;
+}
+.sched-time { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 1px; }
+.sched-venue { font-size: 11px; color: var(--ink-light); }
+
+/* ─── Registration form ───────────────────── */
+.reg-form {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; padding: .95rem; margin-top: .5rem;
+}
+.reg-form-title {
+  font-size: 14px; font-weight: 600; color: var(--ink);
+  margin-bottom: .7rem; display: flex; align-items: center; gap: 6px;
+}
+.reg-form-title i { color: var(--gold); }
+
+.info-banner {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: .6rem .8rem; border-radius: 8px; font-size: 12px;
+  margin-bottom: .65rem; border: 1px solid; line-height: 1.5;
+}
+.info-banner i { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.ib-blue  { background: var(--blue-tint);  color: var(--blue);  border-color: var(--blue-border);  }
+.ib-green { background: var(--green-tint); color: var(--green); border-color: var(--green-border); }
+.ib-red   { background: var(--rust-tint);  color: var(--rust);  border-color: var(--rust-border);  }
+.ib-gold  { background: var(--gold-tint);  color: var(--gold);  border-color: var(--gold-border);  }
+
+/* ─── Payment ──────────────────────────────── */
+.pay-tabs { display: flex; gap: 4px; margin-bottom: .6rem; }
+.pay-tab {
+  flex: 1; padding: 7px 5px; border-radius: 7px;
+  border: 1px solid var(--border2); background: var(--surface);
+  text-align: center; font-size: 11px; font-weight: 500;
+  cursor: pointer; color: var(--ink-light); transition: all .15s;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.pay-tab i { font-size: 16px; }
+.pay-tab.active { background: var(--red); color: #fff; border-color: var(--red); }
+
+.slip-upload {
+  border: 1.5px dashed var(--border2); border-radius: 8px;
+  padding: .95rem; text-align: center; cursor: pointer;
+  background: var(--surface); transition: all .2s;
+}
+.slip-upload:hover { border-color: var(--gold); background: var(--gold-tint); }
+.slip-upload i { font-size: 22px; color: var(--ink-hint); margin-bottom: 4px; }
+.slip-text { font-size: 12px; color: var(--ink-mid); }
+.slip-hint { font-size: 10px; color: var(--ink-hint); margin-top: 2px; }
+.slip-preview {
+  border-radius: 8px; overflow: hidden; border: 1px solid var(--border);
+  margin-top: .5rem; display: none;
+}
+.slip-preview img { width: 100%; max-height: 150px; object-fit: cover; }
+
+.login-hint { font-size: 11px; color: var(--ink-hint); text-align: center; margin-top: .45rem; }
+.login-hint span { color: var(--red); cursor: pointer; text-decoration: underline; }
+
+.step-label {
+  font-size: 10px; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-hint);
+  margin: .65rem 0 .4rem; padding-bottom: .3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Interest chips */
+.interest-grid { display: flex; flex-wrap: wrap; gap: 4px; }
+.interest-chip {
+  border: 1px solid var(--border2); background: transparent;
+  padding: 3px 10px; border-radius: 20px; font-size: 11px;
+  cursor: pointer; color: var(--ink-light);
+  font-family: 'Inter', sans-serif; transition: all .15s;
+}
+.interest-chip.selected { background: var(--red); color: #fff; border-color: var(--red); }
+
+/* ══════════════════════════════════════════
+   QR FULLSCREEN
+══════════════════════════════════════════ */
+.qr-full {
+  position: fixed; inset: 0; background: rgba(30,26,22,.8);
+  backdrop-filter: blur(12px); z-index: 300;
+  display: none; align-items: center; justify-content: center;
+  flex-direction: column; gap: 1rem;
+}
+.qr-full.open { display: flex; }
+.qr-full-box {
+  background: #fff; padding: 1.75rem; border-radius: 16px;
+  text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.25);
+}
+.qr-full-box svg { width: 220px; height: 220px; display: block; }
+.qr-full-id { margin-top: .6rem; font-family: monospace; font-size: 13px; color: #666; }
+.qr-full-close {
+  display: flex; align-items: center; gap: 6px;
+  border: 1px solid rgba(255,255,255,.3); background: transparent;
+  color: rgba(255,255,255,.8); padding: 7px 18px;
+  border-radius: 8px; font-size: 13px; cursor: pointer;
+  font-family: 'Inter', sans-serif; transition: all .15s;
+}
+.qr-full-close:hover { background: rgba(255,255,255,.15); color: #fff; }
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media (max-width: 800px) {
+  .app-main { grid-template-columns: 1fr; }
+  .left-panel { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+  .events-grid { grid-template-columns: repeat(2,1fr); }
+  .hero-price-tag { display: none; }
+}
+@media (max-width: 520px) {
+  .events-grid { grid-template-columns: 1fr; }
+  .modal-stats { grid-template-columns: 1fr 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .nav-brand { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Dev toggle -->
+<button id="devToggle" onclick="toggleUser()">
+  <i class="ti ti-switch-2"></i> View: <span id="devBadge">ล็อกอินแล้ว</span>
+</button>
+
+<!-- Nav -->
+<nav class="nav">
+  <a class="nav-logo" href="#">
+    <img src="./logo.jpg" alt="TCOS Logo" width="32" height="32">
+  </a>
+  <div class="nav-right" id="navRight"></div>
+</nav>
+
+<div class="app-main">
+
+  <!-- LEFT -->
+  <aside class="left-panel" id="leftPanel"></aside>
+
+  <!-- RIGHT -->
+  <main class="right-panel">
+
+    <!-- Hero -->
+    <div class="hero-banner" onclick="openEvent(0)" role="button" aria-label="ละครเวที ทางผ่าน">
+      <div class="hero-bg"></div>
+      <div class="hero-curtain-l"></div>
+      <div class="hero-curtain-r"></div>
+      <div class="hero-glow"></div>
+      <div class="hero-content">
+        <div class="hero-eyebrow"><i class="ti ti-star-filled"></i> Featured Event</div>
+        <div class="hero-title">ละครเวที <em>ทางผ่าน</em></div>
+        <div class="hero-meta">
+          <span><i class="ti ti-calendar"></i>20–22 มิ.ย. 2025</span>
+          <span><i class="ti ti-map-pin"></i>โรงละครแห่งชาติ</span>
+        </div>
+      </div>
+      <div class="hero-price-tag">
+        <div class="hero-price-val">฿350</div>
+        <div class="hero-price-sub">/ ที่นั่ง</div>
+      </div>
+    </div>
+
+    <!-- Banners -->
+    <div class="slabel" style="margin-bottom:.55rem"><i class="ti ti-speakerphone"></i> ประกาศ & สปอนเซอร์</div>
+    <div class="banner-strip">
+      <div class="banner-card" onclick="">
+        <div class="banner-inner bc1">
+          <span class="banner-tag">ประกาศ</span>
+          <span class="banner-label">เปิดรับสมาชิก TCOS ปี 2025</span>
+        </div>
+      </div>
+      <div class="banner-card">
+        <div class="banner-inner bc2">
+          <span class="banner-tag">สปอนเซอร์</span>
+          <span class="banner-label">Supported by GreenArt Foundation</span>
+        </div>
+      </div>
+      <div class="banner-card">
+        <div class="banner-inner bc3">
+          <span class="banner-tag">กิจกรรม</span>
+          <span class="banner-label">Workshop พิเศษ นักเรียน ม.ปลาย</span>
+        </div>
+      </div>
+      <div class="banner-card">
+        <div class="banner-inner bc4">
+          <span class="banner-tag">ทุน</span>
+          <span class="banner-label">ทุนสนับสนุนศิลปินรุ่นใหม่</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommended -->
+    <div class="sec-head">
+      <div class="sec-title">แนะนำสำหรับ<em>คุณ</em></div>
+    </div>
+    <div class="rec-strip" id="recStrip"></div>
+
+    <!-- All events -->
+    <div class="sec-head">
+      <div class="sec-title">กิจกรรม<em>ทั้งหมด</em></div>
+    </div>
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-btn active" data-filter="all">ทั้งหมด</button>
+      <button class="filter-btn" data-filter="การแสดง">การแสดง</button>
+      <button class="filter-btn" data-filter="สายเขียน">สายเขียน</button>
+      <button class="filter-btn" data-filter="แสงและเสียง">แสงและเสียง</button>
+      <button class="filter-btn" data-filter="เครื่องแต่งกาย">เครื่องแต่งกาย</button>
+      <button class="filter-btn" data-filter="เบื้องหลัง">เบื้องหลัง</button>
+      <button class="filter-btn" data-filter="เข้าฟรี">เข้าฟรี</button>
+    </div>
+    <div class="events-grid" id="eventsGrid"></div>
+  </main>
+</div>
+
+<!-- Event modal -->
+<div class="modal-overlay" id="eventModal" onclick="closeIfBg(event,'eventModal')">
+  <div class="modal" id="eventModalContent" role="dialog" aria-modal="true"></div>
+</div>
+
+<!-- QR fullscreen -->
+<div class="qr-full" id="qrFull" onclick="this.classList.remove('open')">
+  <div class="qr-full-box" onclick="event.stopPropagation()">
+    <svg viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="88" height="88" fill="white"/>
+      <rect x="4" y="4" width="24" height="24" rx="2" fill="#1E1A16"/><rect x="8" y="8" width="16" height="16" rx="1" fill="white"/><rect x="12" y="12" width="8" height="8" fill="#1E1A16"/>
+      <rect x="60" y="4" width="24" height="24" rx="2" fill="#1E1A16"/><rect x="64" y="8" width="16" height="16" rx="1" fill="white"/><rect x="68" y="12" width="8" height="8" fill="#1E1A16"/>
+      <rect x="4" y="60" width="24" height="24" rx="2" fill="#1E1A16"/><rect x="8" y="64" width="16" height="16" rx="1" fill="white"/><rect x="12" y="68" width="8" height="8" fill="#1E1A16"/>
+      <rect x="32" y="4" width="4" height="4" fill="#1E1A16"/><rect x="40" y="4" width="4" height="4" fill="#1E1A16"/><rect x="48" y="4" width="8" height="4" fill="#1E1A16"/>
+      <rect x="32" y="12" width="8" height="4" fill="#1E1A16"/><rect x="48" y="12" width="4" height="4" fill="#1E1A16"/>
+      <rect x="32" y="20" width="4" height="8" fill="#1E1A16"/><rect x="40" y="20" width="8" height="4" fill="#1E1A16"/>
+      <rect x="4" y="32" width="4" height="8" fill="#1E1A16"/><rect x="12" y="32" width="8" height="4" fill="#1E1A16"/><rect x="24" y="32" width="4" height="4" fill="#1E1A16"/>
+      <rect x="32" y="32" width="12" height="4" fill="#1E1A16"/><rect x="48" y="32" width="4" height="8" fill="#1E1A16"/><rect x="56" y="32" width="8" height="4" fill="#1E1A16"/>
+      <rect x="68" y="32" width="4" height="4" fill="#1E1A16"/><rect x="76" y="32" width="8" height="8" fill="#1E1A16"/>
+      <rect x="4" y="40" width="8" height="4" fill="#1E1A16"/><rect x="20" y="40" width="8" height="4" fill="#1E1A16"/>
+      <rect x="32" y="40" width="4" height="4" fill="#1E1A16"/><rect x="40" y="40" width="12" height="8" fill="#1E1A16"/>
+      <rect x="56" y="40" width="4" height="4" fill="#1E1A16"/><rect x="64" y="40" width="8" height="4" fill="#1E1A16"/>
+      <rect x="76" y="40" width="4" height="4" fill="#1E1A16"/>
+      <rect x="4" y="48" width="4" height="8" fill="#1E1A16"/><rect x="12" y="52" width="4" height="4" fill="#1E1A16"/><rect x="20" y="48" width="8" height="8" fill="#1E1A16"/>
+      <rect x="32" y="52" width="8" height="4" fill="#1E1A16"/><rect x="44" y="52" width="4" height="4" fill="#1E1A16"/>
+      <rect x="56" y="48" width="4" height="4" fill="#1E1A16"/><rect x="64" y="52" width="16" height="4" fill="#1E1A16"/>
+      <rect x="32" y="60" width="4" height="8" fill="#1E1A16"/><rect x="40" y="60" width="8" height="4" fill="#1E1A16"/>
+      <rect x="52" y="60" width="4" height="4" fill="#1E1A16"/><rect x="60" y="60" width="4" height="8" fill="#1E1A16"/>
+      <rect x="68" y="60" width="4" height="4" fill="#1E1A16"/><rect x="76" y="64" width="8" height="4" fill="#1E1A16"/>
+      <rect x="32" y="72" width="12" height="4" fill="#1E1A16"/><rect x="48" y="68" width="4" height="8" fill="#1E1A16"/>
+      <rect x="56" y="72" width="8" height="4" fill="#1E1A16"/><rect x="68" y="68" width="4" height="8" fill="#1E1A16"/>
+      <rect x="76" y="72" width="8" height="4" fill="#1E1A16"/>
+    </svg>
+  </div>
+  <button class="qr-full-close"><i class="ti ti-x"></i> ปิด</button>
+</div>
+
+<script>
+/* ── Data ─────────────────────────────────── */
+let isLoggedIn = true;
+let currentIdx = 0;
+let activePayMode = 'promptpay';
+
+const EVENTS = [
+  {
+    title: "ละครเวที ทางผ่าน",
+    cat: "การแสดง", pClass: "p1", icon: "ti-masks-theater",
+    price: 350, seats: 200, registered: 162, free: false, hot: true,
+    date: "20–22 มิ.ย. 2025", time: "19:00–21:30",
+    venue: "โรงละครแห่งชาติ, กรุงเทพ",
+    desc: "บทละครสะท้อนชีวิตและความสัมพันธ์ระหว่างคนสองรุ่น ผ่านดนตรี บทกวี และการแสดงสด — เปิดรับผู้ชมทุกคน",
+    schedule: [
+      { date: "20 มิ.ย.", time: "19:00–21:30", venue: "โรงละครแห่งชาติ ชั้น 1" },
+      { date: "21 มิ.ย.", time: "14:00–16:30", venue: "โรงละครแห่งชาติ ชั้น 1" },
+      { date: "22 มิ.ย.", time: "19:00–21:30", venue: "โรงละครแห่งชาติ ชั้น 2" },
+    ],
+    questions: ["คุณเคยชมละครเวทีมาก่อนหรือไม่?", "ทราบข่าวกิจกรรมนี้จากช่องทางไหน?"],
+    myEvent: true
+  },
+  {
+    title: "Workshop เขียนบท: โครงสร้างละคร",
+    cat: "สายเขียน", pClass: "p2", icon: "ti-writing",
+    price: 0, seats: 30, registered: 18, free: true, hot: false,
+    date: "5 มิ.ย. 2025", time: "10:00–16:00",
+    venue: "BACC ชั้น 3, สยาม",
+    desc: "เรียนรู้การเขียนบทละครตั้งแต่โครงสร้างพื้นฐาน ตัวละคร ความขัดแย้ง ไปจนถึงการเล่าเรื่องผ่านบทสนทนา",
+    schedule: [{ date: "5 มิ.ย.", time: "10:00–16:00", venue: "BACC ห้อง 301, สยาม" }],
+    questions: ["มีประสบการณ์เขียนบทระดับไหน?", "มีไอเดียบทที่อยากพัฒนาหรือไม่?"],
+    myEvent: false
+  },
+  {
+    title: "Lighting Design Bootcamp",
+    cat: "แสงและเสียง", pClass: "p3", icon: "ti-bulb",
+    price: 450, seats: 20, registered: 20, free: false, hot: false,
+    date: "8 มิ.ย. 2025", time: "09:00–17:00",
+    venue: "Scala Theatre, สยาม",
+    desc: "เข้มข้น 1 วันกับการออกแบบแสงสำหรับการแสดงสด ครอบคลุม DMX controller, Gobo, Color gel และการจัดแสงตามอารมณ์",
+    schedule: [{ date: "8 มิ.ย.", time: "09:00–17:00", venue: "Scala Theatre Tech Room, สยาม" }],
+    questions: ["เคยใช้ lighting board มาก่อนหรือไม่?", "ซอฟต์แวร์ที่คุ้นเคย?"],
+    myEvent: false
+  },
+  {
+    title: "Costume & Wardrobe — ลงมือเย็บ",
+    cat: "เครื่องแต่งกาย", pClass: "p5", icon: "ti-needle-thread",
+    price: 200, seats: 15, registered: 9, free: false, hot: true,
+    date: "12 มิ.ย. 2025", time: "13:00–18:00",
+    venue: "Studio TCOS, ลาดพร้าว",
+    desc: "ออกแบบและเย็บชุดละครตั้งแต่ต้น — เลือกผ้า ตัดแบบ ไปจนถึงการฟิตติ้งให้นักแสดง กับนักออกแบบจาก RST Theatre",
+    schedule: [{ date: "12 มิ.ย.", time: "13:00–18:00", venue: "Studio TCOS, ลาดพร้าว" }],
+    questions: ["ประสบการณ์ตัดเย็บของคุณ?", "มีจักรเย็บผ้าของตัวเองหรือไม่?"],
+    myEvent: true
+  },
+  {
+    title: "Sound Engineering สำหรับละครเวที",
+    cat: "แสงและเสียง", pClass: "p4", icon: "ti-music",
+    price: 0, seats: 25, registered: 22, free: true, hot: false,
+    date: "15 มิ.ย. 2025", time: "10:00–14:00",
+    venue: "Jam Factory, ลาดพร้าว",
+    desc: "ทำความเข้าใจระบบเสียงสำหรับการแสดงสด ครอบคลุม mic placement, mixing live และการแก้ปัญหาเสียงในโรงละคร",
+    schedule: [{ date: "15 มิ.ย.", time: "10:00–14:00", venue: "Jam Factory Sound Studio" }],
+    questions: ["มีพื้นฐานดนตรีหรือไม่?", "ซอฟต์แวร์ตัดต่อเสียงที่เคยใช้?"],
+    myEvent: false
+  },
+  {
+    title: "Stage Management 101",
+    cat: "เบื้องหลัง", pClass: "p6", icon: "ti-clipboard-list",
+    price: 0, seats: 40, registered: 15, free: true, hot: false,
+    date: "18 มิ.ย. 2025", time: "14:00–17:00",
+    venue: "ออนไลน์ (Zoom)",
+    desc: "บทบาทของ Stage Manager ตั้งแต่การจัดตารางซ้อม การสื่อสารทีม ไปจนถึงการบริหาร cue sheet ในวันแสดง",
+    schedule: [{ date: "18 มิ.ย.", time: "14:00–17:00", venue: "ออนไลน์ — Zoom Link ส่งทาง Email" }],
+    questions: ["เคยมีประสบการณ์บริหารโปรเจกต์หรือไม่?"],
+    myEvent: false
+  },
+  {
+    title: "บทกวีบนเวที: Spoken Word Night",
+    cat: "สายเขียน", pClass: "p7", icon: "ti-microphone",
+    price: 150, seats: 60, registered: 33, free: false, hot: false,
+    date: "25 มิ.ย. 2025", time: "18:00–21:00",
+    venue: "River City Bangkok",
+    desc: "ค่ำคืนแห่งบทกวีและ Spoken Word โดยนักกวีรุ่นใหม่ 8 คน พร้อม Open Mic สำหรับผู้ชม",
+    schedule: [{ date: "25 มิ.ย.", time: "18:00–21:00", venue: "River City Bangkok ชั้น 2" }],
+    questions: ["สนใจเข้าร่วม Open Mic หรือไม่?"],
+    myEvent: false
+  },
+];
+
+const INTERESTS = ['การแสดง','สายเขียน','แสงและเสียง','เครื่องแต่งกาย','Stage Mgmt','ดนตรี','กำกับ','ฉากและอุปกรณ์'];
+
+/* ── Render all ─────────────────────────── */
+function render() {
+  renderNav();
+  renderLeft();
+  renderRec();
+  renderEvents('all');
+  document.querySelectorAll('#filterBar .filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('#filterBar .filter-btn[data-filter="all"]').classList.add('active');
+}
+
+function renderNav() {
+  const el = document.getElementById('navRight');
+  el.innerHTML = isLoggedIn
+    ? `<span style="font-size:12px;color:var(--ink-light)">สวัสดี, <strong style="color:var(--ink);font-weight:600">พิมพ์ชนก</strong></span>
+       <button class="btn btn-ghost" style="font-size:12px;padding:5px 11px"><i class="ti ti-logout"></i> ออกจากระบบ</button>`
+    : `<button class="btn" onclick="openAuthModal('login')"><i class="ti ti-login"></i> เข้าสู่ระบบ</button>
+       <button class="btn btn-primary" onclick="openAuthModal('register')">สมัครสมาชิก</button>`;
+}
+
+/* ── Left panel ─────────────────────────── */
+function renderLeft() {
+  const lp = document.getElementById('leftPanel');
+
+  if (isLoggedIn) {
+    lp.innerHTML = `
+      <div class="user-card">
+        <div class="user-avatar-row">
+          <div class="user-avatar">พ</div>
+          <div>
+            <div class="user-name">พิมพ์ชนก ไชยสิทธิ์</div>
+            <div class="user-nick">Pim · หญิง</div>
+          </div>
+        </div>
+        <div class="user-meta">
+          <div class="user-meta-row"><i class="ti ti-phone"></i>089-234-5678</div>
+          <div class="user-meta-row"><i class="ti ti-mail"></i>pim@email.com</div>
+        </div>
+        <div class="user-tags">
+          <span class="tag">ละคร</span>
+          <span class="tag">เครื่องแต่งกาย</span>
+          <span class="tag">สายเขียน</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="slabel"><i class="ti ti-qrcode"></i> QR สำหรับเช็คชื่อ</div>
+        <div class="qr-card">
+          <div class="qr-box">${qrSVG()}</div>
+          <button class="btn-qr" onclick="document.getElementById('qrFull').classList.add('open')">
+            <i class="ti ti-maximize"></i> แสดงเต็มจอ
+          </button>
+        </div>
+      </div>
+
+      <div style="flex:1;min-height:0">
+        <div class="slabel"><i class="ti ti-calendar-check"></i> กิจกรรมของฉัน</div>
+        <div class="my-events">
+          <div class="my-event-item" onclick="openEvent(0)">
+            <div class="sdot sdot-up"></div>
+            <div class="mei-info"><div class="mei-name">ละครเวที ทางผ่าน</div><div class="mei-date">20–22 มิ.ย. 2025 · โรงละครแห่งชาติ</div></div>
+            <span class="sbadge sbadge-up">รอเข้าร่วม</span>
+          </div>
+          <div class="my-event-item" onclick="openEvent(3)">
+            <div class="sdot sdot-up"></div>
+            <div class="mei-info"><div class="mei-name">Costume & Wardrobe</div><div class="mei-date">12 มิ.ย. 2025 · ลาดพร้าว</div></div>
+            <span class="sbadge sbadge-up">รอเข้าร่วม</span>
+          </div>
+          <div class="my-event-item">
+            <div class="sdot sdot-ok"></div>
+            <div class="mei-info"><div class="mei-name">Spoken Word Open Night</div><div class="mei-date">10 พ.ค. 2025 · River City</div></div>
+            <span class="sbadge sbadge-ok">เข้าร่วมแล้ว</span>
+          </div>
+          <div class="my-event-item">
+            <div class="sdot sdot-no"></div>
+            <div class="mei-info"><div class="mei-name">Directing Masterclass</div><div class="mei-date">2 พ.ค. 2025 · BACC</div></div>
+            <span class="sbadge sbadge-no">ไม่ได้เข้าร่วม</span>
+          </div>
+        </div>
+      </div>`;
+  } else {
+    // Guest
+    lp.innerHTML = `
+      <div class="guest-panel">
+        <div class="guest-title">ยินดีต้อนรับ</div>
+        <div class="guest-sub">เข้าสู่ระบบหรือสมัครสมาชิกเพื่อลงทะเบียนกิจกรรม รับ QR เช็คชื่อ และติดตามกิจกรรมของคุณ</div>
+        <div class="tabs-mini">
+          <div class="tab-mini active" id="gTabLogin" onclick="switchGuestTab('login')">เข้าสู่ระบบ</div>
+          <div class="tab-mini" id="gTabRegister" onclick="switchGuestTab('register')">สมัครสมาชิก</div>
+        </div>
+        <div id="guestFormWrap"></div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.9rem">
+        <div class="slabel"><i class="ti ti-sparkles"></i> สมัครบัญชี TCOS เลย </div>
+        ${
+          [
+          ['ti-intro','เข้าร่วมกิจกรรมกับ TCOS ด้วยการสมัครบัญชี'],
+          ['ti-qrcode','QR Code เช็คชื่ออัตโนมัติ'],
+          ['ti-calendar-check','ติดตามกิจกรรมที่ลงทะเบียน'],
+          ['ti-bell','การแจ้งเตือนก่อนวันงาน'],
+          ['ti-heart','บันทึกกิจกรรมที่สนใจ'],
+        ].map(([ic, tx]) => `
+          <div class="perk-item"><i class="ti ${ic}"></i>${tx}</div>
+        `).join('')}
+      </div>`;
+    renderGuestForm('login');
+  }
+}
+
+function switchGuestTab(tab) {
+  document.getElementById('gTabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('gTabRegister').classList.toggle('active', tab === 'register');
+  renderGuestForm(tab);
+}
+
+function renderGuestForm(tab) {
+  const w = document.getElementById('guestFormWrap');
+  if (!w) return;
+  if (tab === 'login') {
+    w.innerHTML = `
+      <div class="mini-form">
+        <div class="form-group"><label class="form-label">E-mail</label><input class="form-input" type="email" placeholder="your@email.com"></div>
+        <div class="form-group"><label class="form-label">รหัสผ่าน</label><input class="form-input" type="password" placeholder="••••••••"></div>
+        <button class="btn btn-primary btn-block" style="margin-top:.15rem"><i class="ti ti-login"></i> เข้าสู่ระบบ</button>
+        <div style="font-size:11px;text-align:center;color:var(--ink-hint);margin-top:.35rem">
+          ลืมรหัสผ่าน? <span style="color:var(--red);cursor:pointer;text-decoration:underline">รีเซ็ตที่นี่</span>
+        </div>
+      </div>`;
+  } else {
+    w.innerHTML = `
+      <div class="mini-form">
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">ชื่อ</label><input class="form-input" placeholder="ชื่อจริง"></div>
+          <div class="form-group"><label class="form-label">นามสกุล</label><input class="form-input" placeholder="นามสกุล"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">ชื่อเล่น</label><input class="form-input" placeholder="ชื่อเล่น"></div>
+          <div class="form-group"><label class="form-label">เพศ</label>
+            <select class="form-select"><option>ชาย</option><option>หญิง</option><option>LGBTQ+</option><option>ไม่ระบุ</option></select>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">E-mail</label><input class="form-input" type="email" placeholder="your@email.com"></div>
+        <div class="form-group"><label class="form-label">เบอร์โทร</label><input class="form-input" placeholder="08X-XXX-XXXX"></div>
+        <div class="form-group"><label class="form-label">รหัสผ่าน</label><input class="form-input" type="password" placeholder="อย่างน้อย 8 ตัวอักษร"></div>
+        <div class="form-group">
+          <label class="form-label">ความสนใจ (ไม่บังคับ)</label>
+          <div class="interest-grid">${INTERESTS.map(t => `<button type="button" class="interest-chip" onclick="this.classList.toggle('selected')">${t}</button>`).join('')}</div>
+        </div>
+        <button class="btn btn-primary btn-block" style="margin-top:.15rem"><i class="ti ti-user-plus"></i> สร้างบัญชี TCOS</button>
+      </div>`;
+  }
+}
+
+/* ── Recommended ────────────────────────── */
+function renderRec() {
+  const recs = [EVENTS[0], EVENTS[1], EVENTS[3], EVENTS[6]];
+  document.getElementById('recStrip').innerHTML = recs.map(e => {
+    const idx = EVENTS.indexOf(e);
+    return `
+    <div class="rec-card" onclick="openEvent(${idx})">
+      <div class="rec-poster ${e.pClass}">
+        <div class="rec-poster-icon"><i class="ti ${e.icon}"></i></div>
+        ${e.hot ? '<span class="rec-hot">HOT</span>' : ''}
+      </div>
+      <div class="rec-body">
+        <div class="rec-title">${e.title}</div>
+        <div class="rec-sub">${e.date} · ${e.free ? 'ฟรี' : '฿' + e.price}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ── Events grid ────────────────────────── */
+function renderEvents(filter) {
+  const list = filter === 'all' ? EVENTS
+    : filter === 'เข้าฟรี' ? EVENTS.filter(e => e.free)
+    : EVENTS.filter(e => e.cat === filter);
+
+  document.getElementById('eventsGrid').innerHTML = list.map(e => {
+    const idx = EVENTS.indexOf(e);
+    const pct = Math.round(e.registered / e.seats * 100);
+    const isFull = e.registered >= e.seats;
+    const badge = e.free ? `<span class="ev-badge eb-free">ฟรี</span>`
+      : isFull ? `<span class="ev-badge eb-full">เต็ม</span>`
+      : `<span class="ev-badge eb-paid">฿${e.price}</span>`;
+    const btn = e.myEvent
+      ? `<button class="btn-reg btn-reg-done" disabled><i class="ti ti-check"></i> ลงทะเบียนแล้ว</button>`
+      : isFull ? `<button class="btn-reg btn-reg-full" disabled>เต็มแล้ว</button>`
+      : `<button class="btn-reg" onclick="event.stopPropagation();openEvent(${idx})">ลงทะเบียน</button>`;
+    return `
+    <div class="event-card" onclick="openEvent(${idx})" tabindex="0" role="button">
+      <div class="event-poster ${e.pClass}">
+        <div class="poster-icon"><i class="ti ${e.icon}"></i></div>
+        ${badge}
+      </div>
+      <div class="event-body">
+        <div class="event-title">${e.title}</div>
+        <div class="event-meta">
+          <div class="emr"><i class="ti ti-calendar"></i>${e.date}</div>
+          <div class="emr"><i class="ti ti-clock"></i>${e.time}</div>
+          <div class="emr"><i class="ti ti-map-pin"></i>${e.venue}</div>
+        </div>
+        <div class="event-footer">
+          <div class="seat-wrap">
+            <div class="seat-label">${e.registered}/${e.seats} ที่นั่ง</div>
+            <div class="seat-bar"><div class="${pct > 80 ? 'seat-fill seat-fill-hi' : 'seat-fill'}" style="width:${pct}%"></div></div>
+          </div>
+          ${btn}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ── Filter ─────────────────────────────── */
+document.getElementById('filterBar').addEventListener('click', function(e) {
+  const b = e.target.closest('.filter-btn');
+  if (!b) return;
+  this.querySelectorAll('.filter-btn').forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  renderEvents(b.dataset.filter);
+});
+
+/* ── Open event modal ───────────────────── */
+function openEvent(idx) {
+  currentIdx = idx;
+  const e = EVENTS[idx];
+  const isFull = e.registered >= e.seats;
+
+  const schedHTML = e.schedule.map(s => `
+    <div class="sched-row">
+      <div class="sched-date">${s.date}</div>
+      <div>
+        <div class="sched-time">${s.time}</div>
+        <div class="sched-venue"><i class="ti ti-map-pin" style="font-size:10px"></i> ${s.venue}</div>
+      </div>
+    </div>`).join('');
+
+  let regSection = '';
+
+  if (isFull) {
+    regSection = `<div class="info-banner ib-red"><i class="ti ti-alert-circle"></i>กิจกรรมนี้เต็มแล้ว ขออภัยในความไม่สะดวก</div>`;
+  } else if (e.myEvent && isLoggedIn) {
+    regSection = `<div class="info-banner ib-green"><i class="ti ti-circle-check"></i>คุณลงทะเบียนกิจกรรมนี้แล้ว — แสดง QR Code ในแผงซ้ายเพื่อเช็คชื่อหน้างาน</div>`;
+  } else if (!isLoggedIn) {
+    // Guest flow: sign up + register in one form
+    const qSet = e.questions.map(q => `
+      <div class="form-group" style="margin-bottom:.45rem">
+        <label class="form-label">${q}</label>
+        <textarea class="form-textarea" placeholder="กรอกคำตอบ..."></textarea>
+      </div>`).join('');
+    regSection = `
+      <div class="reg-form">
+        <div class="reg-form-title"><i class="ti ti-user-plus"></i>สมัครบัญชีและลงทะเบียน</div>
+        <div class="info-banner ib-gold"><i class="ti ti-info-circle"></i>กรอกข้อมูลด้านล่างเพื่อสร้างบัญชี TCOS และลงทะเบียนกิจกรรมนี้พร้อมกันในขั้นตอนเดียว</div>
+
+        <div class="step-label">ขั้นที่ 1 — ข้อมูลบัญชี</div>
+        <div class="form-row" style="margin-bottom:.45rem">
+          <div class="form-group"><label class="form-label">ชื่อ</label><input class="form-input" placeholder="ชื่อจริง"></div>
+          <div class="form-group"><label class="form-label">นามสกุล</label><input class="form-input" placeholder="นามสกุล"></div>
+        </div>
+        <div class="form-row" style="margin-bottom:.45rem">
+          <div class="form-group"><label class="form-label">ชื่อเล่น</label><input class="form-input" placeholder="ชื่อเล่น"></div>
+          <div class="form-group"><label class="form-label">เพศ</label>
+            <select class="form-select"><option>ชาย</option><option>หญิง</option><option>LGBTQ+</option><option>ไม่ระบุ</option></select>
+          </div>
+        </div>
+        <div class="form-row" style="margin-bottom:.45rem">
+          <div class="form-group"><label class="form-label">E-mail</label><input class="form-input" type="email" placeholder="your@email.com"></div>
+          <div class="form-group"><label class="form-label">เบอร์โทร</label><input class="form-input" placeholder="08X-XXX-XXXX"></div>
+        </div>
+        <div class="form-group" style="margin-bottom:.6rem">
+          <label class="form-label">รหัสผ่าน</label><input class="form-input" type="password" placeholder="อย่างน้อย 8 ตัวอักษร">
+        </div>
+
+        <div class="step-label">ขั้นที่ 2 — คำถามเพิ่มเติม</div>
+        ${qSet}
+        ${buildPay(e)}
+
+        <button class="btn btn-primary btn-block" style="margin-top:.5rem">
+          <i class="ti ti-user-check"></i> สมัครบัญชีและลงทะเบียน${!e.free ? ' (฿' + e.price + ')' : ''}
+        </button>
+        <div class="login-hint">มีบัญชีแล้ว? <span onclick="closeModal('eventModal');openAuthModal('login')">เข้าสู่ระบบ</span></div>
+      </div>`;
+  } else {
+    // Logged in, not yet registered
+    const qSet = e.questions.map(q => `
+      <div class="form-group" style="margin-bottom:.45rem">
+        <label class="form-label">${q}</label>
+        <textarea class="form-textarea" placeholder="กรอกคำตอบ..."></textarea>
+      </div>`).join('');
+    regSection = `
+      <div class="reg-form">
+        <div class="reg-form-title"><i class="ti ti-user-check"></i>ลงทะเบียนเข้าร่วม</div>
+        <div class="info-banner ib-blue"><i class="ti ti-info-circle"></i>ข้อมูลด้านล่างดึงมาจากบัญชี TCOS ของคุณอัตโนมัติ</div>
+        <div class="form-row" style="margin-bottom:.45rem">
+          <div class="form-group"><label class="form-label">ชื่อ</label><input class="form-input" value="พิมพ์ชนก" readonly></div>
+          <div class="form-group"><label class="form-label">นามสกุล</label><input class="form-input" value="ไชยสิทธิ์" readonly></div>
+        </div>
+        <div class="form-row" style="margin-bottom:.6rem">
+          <div class="form-group"><label class="form-label">ชื่อเล่น</label><input class="form-input" value="Pim" readonly></div>
+          <div class="form-group"><label class="form-label">เบอร์โทร</label><input class="form-input" value="089-234-5678" readonly></div>
+        </div>
+        ${qSet}
+        ${buildPay(e)}
+        <button class="btn btn-primary btn-block" style="margin-top:.5rem">
+          <i class="ti ti-check"></i> ยืนยันการลงทะเบียน${!e.free ? ' (฿' + e.price + ')' : ' (ฟรี)'}
+        </button>
+      </div>`;
+  }
+
+  document.getElementById('eventModalContent').innerHTML = `
+    <div class="modal-poster ${e.pClass}">
+      <div class="modal-poster-icon"><i class="ti ${e.icon}"></i></div>
+      <button class="modal-close" onclick="closeModal('eventModal')"><i class="ti ti-x"></i></button>
+      <div class="modal-pills">
+        <span class="mpill">${e.cat}</span>
+        <span class="mpill mpill-gold">${e.free ? 'ฟรี' : '฿' + e.price}</span>
+        ${e.hot ? '<span class="mpill" style="background:rgba(196,32,32,.8)">HOT</span>' : ''}
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-title">${e.title}</div>
+      <p class="modal-desc">${e.desc}</p>
+      <div class="modal-stats">
+        <div class="stat-card"><div class="stat-val">${e.seats}</div><div class="stat-key">ที่นั่งทั้งหมด</div></div>
+        <div class="stat-card"><div class="stat-val">${e.registered}</div><div class="stat-key">ลงทะเบียนแล้ว</div></div>
+        <div class="stat-card"><div class="stat-val">${e.seats - e.registered}</div><div class="stat-key">ที่นั่งเหลือ</div></div>
+      </div>
+      <div class="msection">
+        <div class="msection-title"><i class="ti ti-calendar"></i> ตารางกิจกรรม</div>
+        ${schedHTML}
+      </div>
+      ${regSection}
+    </div>`;
+
+  document.getElementById('eventModal').classList.add('open');
+  activePayMode = 'promptpay';
+}
+
+/* ── Payment section ────────────────────── */
+function buildPay(e) {
+  if (e.free) return '';
+  return `
+    <div style="margin-bottom:.6rem">
+      <label class="form-label" style="margin-bottom:.4rem">วิธีชำระเงิน (฿${e.price})</label>
+      <div class="pay-tabs">
+        <div class="pay-tab active" id="pt-promptpay" onclick="switchPay('promptpay')">
+          <i class="ti ti-qrcode"></i> PromptPay
+        </div>
+        <div class="pay-tab" id="pt-card" onclick="switchPay('card')">
+          <i class="ti ti-credit-card"></i> บัตรเครดิต
+        </div>
+        <div class="pay-tab" id="pt-cash" onclick="switchPay('cash')">
+          <i class="ti ti-cash"></i> เงินสด
+        </div>
+      </div>
+      <div id="payContent">${renderPayContent('promptpay', e.price)}</div>
+    </div>`;
+}
+
+function switchPay(mode) {
+  activePayMode = mode;
+  document.querySelectorAll('.pay-tab').forEach(t => t.classList.remove('active'));
+  const tab = document.getElementById('pt-' + mode);
+  if (tab) tab.classList.add('active');
+  const pc = document.getElementById('payContent');
+  if (pc) pc.innerHTML = renderPayContent(mode, EVENTS[currentIdx].price);
+}
+
+function renderPayContent(mode, price) {
+  if (mode === 'promptpay') return `
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.75rem;text-align:center;margin-bottom:.5rem">
+      <div style="font-size:11px;color:var(--ink-mid);margin-bottom:.5rem">สแกน QR เพื่อโอน ฿${price}</div>
+      <div style="width:76px;height:76px;background:#fff;border:1px solid var(--border);border-radius:6px;margin:0 auto .45rem;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--ink-light)">QR Code</div>
+      <div style="font-size:10px;color:var(--ink-hint)">PromptPay: 062-345-6789 (TCOS)</div>
+    </div>
+    <label class="form-label">อัพโหลดสลิปการโอน</label>
+    <div class="slip-upload" onclick="document.getElementById('slipInput').click()"
+         ondragover="event.preventDefault();this.style.borderColor='var(--gold)'"
+         ondragleave="this.style.borderColor=''"
+         ondrop="handleDrop(event)">
+      <i class="ti ti-upload"></i>
+      <div class="slip-text">คลิกหรือลากไฟล์สลิปมาวาง</div>
+      <div class="slip-hint">PNG, JPG, PDF — ไม่เกิน 5MB</div>
+    </div>
+    <input type="file" id="slipInput" accept="image/*,.pdf" style="display:none" onchange="previewSlip(this)">
+    <div class="slip-preview" id="slipPreview"><img id="slipImg" src="" alt="slip preview"></div>`;
+
+  if (mode === 'card') return `
+    <div class="form-group" style="margin-bottom:.45rem">
+      <label class="form-label">หมายเลขบัตร</label>
+      <input class="form-input" placeholder="0000 0000 0000 0000" maxlength="19">
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">วันหมดอายุ</label><input class="form-input" placeholder="MM/YY" maxlength="5"></div>
+      <div class="form-group"><label class="form-label">CVV</label><input class="form-input" placeholder="123" maxlength="3" type="password"></div>
+    </div>
+    <div class="form-group" style="margin-top:.45rem">
+      <label class="form-label">ชื่อบนบัตร</label>
+      <input class="form-input" placeholder="ชื่อภาษาอังกฤษตามบัตร">
+    </div>`;
+
+  return `
+    <div class="info-banner ib-gold" style="margin-bottom:.45rem">
+      <i class="ti ti-cash"></i>
+      <div>ชำระเงินสดได้ที่จุดลงทะเบียนหน้างาน<br>
+      <span style="font-size:10px;opacity:.8">กรุณานำ QR Code มาแสดงเพื่อยืนยันที่นั่ง</span></div>
+    </div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.65rem">
+      <div style="font-size:10px;color:var(--ink-hint);margin-bottom:2px">จุดรับชำระเงิน</div>
+      <div style="font-size:13px;font-weight:500;color:var(--ink)">Counter TCOS — ประตู A ชั้น 1</div>
+      <div style="font-size:11px;color:var(--ink-light);margin-top:2px">เปิด 1 ชั่วโมงก่อนงานเริ่ม</div>
+    </div>`;
+}
+
+function previewSlip(input) {
+  if (!input.files || !input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const p = document.getElementById('slipPreview');
+    const i = document.getElementById('slipImg');
+    if (p && i) { i.src = ev.target.result; p.style.display = 'block'; }
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  const f = e.dataTransfer.files[0];
+  if (!f) return;
+  const inp = document.getElementById('slipInput');
+  if (inp) { try { const dt = new DataTransfer(); dt.items.add(f); inp.files = dt.files; previewSlip(inp); } catch(_) {} }
+  e.currentTarget.style.borderColor = '';
+}
+
+/* ── Auth modal ─────────────────────────── */
+function openAuthModal(tab) {
+  document.getElementById('eventModalContent').innerHTML = `
+    <div style="padding:1.2rem 1.35rem .7rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--ink)">TCOS Account</div>
+      <button class="modal-close" style="position:static;background:var(--surface3);color:var(--ink-mid)" onclick="closeModal('eventModal')"><i class="ti ti-x"></i></button>
+    </div>
+    <div style="padding:1.2rem 1.35rem">
+      <div class="tabs-mini" style="margin-bottom:1rem">
+        <div class="tab-mini ${tab==='login'?'active':''}" onclick="switchAuthTab(this,'login')">เข้าสู่ระบบ</div>
+        <div class="tab-mini ${tab==='register'?'active':''}" onclick="switchAuthTab(this,'register')">สมัครสมาชิก</div>
+      </div>
+      <div id="authFormWrap"></div>
+    </div>`;
+  renderAuthForm(tab);
+  document.getElementById('eventModal').classList.add('open');
+}
+
+function switchAuthTab(el, tab) {
+  document.querySelectorAll('#eventModalContent .tab-mini').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderAuthForm(tab);
+}
+
+function renderAuthForm(tab) {
+  const w = document.getElementById('authFormWrap');
+  if (!w) return;
+  if (tab === 'login') {
+    w.innerHTML = `<div class="mini-form">
+      <div class="form-group"><label class="form-label">E-mail</label><input class="form-input" type="email" placeholder="your@email.com"></div>
+      <div class="form-group" style="margin-bottom:.65rem"><label class="form-label">รหัสผ่าน</label><input class="form-input" type="password" placeholder="••••••••"></div>
+      <button class="btn btn-primary btn-block"><i class="ti ti-login"></i> เข้าสู่ระบบ</button>
+    </div>`;
+  } else {
+    w.innerHTML = `<div class="mini-form">
+      <div class="form-row"><div class="form-group"><label class="form-label">ชื่อ</label><input class="form-input" placeholder="ชื่อจริง"></div><div class="form-group"><label class="form-label">นามสกุล</label><input class="form-input" placeholder="นามสกุล"></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">ชื่อเล่น</label><input class="form-input" placeholder="ชื่อเล่น"></div><div class="form-group"><label class="form-label">เพศ</label><select class="form-select"><option>ชาย</option><option>หญิง</option><option>LGBTQ+</option><option>ไม่ระบุ</option></select></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">E-mail</label><input class="form-input" type="email" placeholder="your@email.com"></div><div class="form-group"><label class="form-label">เบอร์โทร</label><input class="form-input" placeholder="08X-XXX-XXXX"></div></div>
+      <div class="form-group" style="margin-bottom:.5rem"><label class="form-label">รหัสผ่าน</label><input class="form-input" type="password" placeholder="อย่างน้อย 8 ตัวอักษร"></div>
+      <div class="form-group" style="margin-bottom:.65rem"><label class="form-label">ความสนใจ (ไม่บังคับ)</label><div class="interest-grid">${INTERESTS.map(t=>`<button type="button" class="interest-chip" onclick="this.classList.toggle('selected')">${t}</button>`).join('')}</div></div>
+      <button class="btn btn-primary btn-block"><i class="ti ti-user-plus"></i> สร้างบัญชี TCOS</button>
+    </div>`;
+  }
+}
+
+/* ── QR inline SVG ──────────────────────── */
+function qrSVG() {
+  return `<svg viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="88" height="88" fill="white"/>
+    <rect x="4" y="4" width="24" height="24" rx="2" fill="#1E1A16"/><rect x="8" y="8" width="16" height="16" rx="1" fill="white"/><rect x="12" y="12" width="8" height="8" fill="#1E1A16"/>
+    <rect x="60" y="4" width="24" height="24" rx="2" fill="#1E1A16"/><rect x="64" y="8" width="16" height="16" rx="1" fill="white"/><rect x="68" y="12" width="8" height="8" fill="#1E1A16"/>
+    <rect x="4" y="60" width="24" height="24" rx="2" fill="#1E1A16"/><rect x="8" y="64" width="16" height="16" rx="1" fill="white"/><rect x="12" y="68" width="8" height="8" fill="#1E1A16"/>
+    <rect x="32" y="4" width="4" height="4" fill="#1E1A16"/><rect x="40" y="4" width="4" height="4" fill="#1E1A16"/><rect x="48" y="4" width="8" height="4" fill="#1E1A16"/>
+    <rect x="32" y="12" width="8" height="4" fill="#1E1A16"/><rect x="48" y="12" width="4" height="4" fill="#1E1A16"/>
+    <rect x="32" y="20" width="4" height="8" fill="#1E1A16"/><rect x="40" y="20" width="8" height="4" fill="#1E1A16"/>
+    <rect x="4" y="32" width="4" height="8" fill="#1E1A16"/><rect x="12" y="32" width="8" height="4" fill="#1E1A16"/><rect x="24" y="32" width="4" height="4" fill="#1E1A16"/>
+    <rect x="32" y="32" width="12" height="4" fill="#1E1A16"/><rect x="48" y="32" width="4" height="8" fill="#1E1A16"/><rect x="56" y="32" width="8" height="4" fill="#1E1A16"/>
+    <rect x="68" y="32" width="4" height="4" fill="#1E1A16"/><rect x="76" y="32" width="8" height="8" fill="#1E1A16"/>
+    <rect x="4" y="40" width="8" height="4" fill="#1E1A16"/><rect x="20" y="40" width="8" height="4" fill="#1E1A16"/>
+    <rect x="32" y="40" width="4" height="4" fill="#1E1A16"/><rect x="40" y="40" width="12" height="8" fill="#1E1A16"/>
+    <rect x="56" y="40" width="4" height="4" fill="#1E1A16"/><rect x="64" y="40" width="8" height="4" fill="#1E1A16"/>
+    <rect x="76" y="40" width="4" height="4" fill="#1E1A16"/>
+    <rect x="4" y="48" width="4" height="8" fill="#1E1A16"/><rect x="12" y="52" width="4" height="4" fill="#1E1A16"/><rect x="20" y="48" width="8" height="8" fill="#1E1A16"/>
+    <rect x="32" y="52" width="8" height="4" fill="#1E1A16"/><rect x="44" y="52" width="4" height="4" fill="#1E1A16"/>
+    <rect x="56" y="48" width="4" height="4" fill="#1E1A16"/><rect x="64" y="52" width="16" height="4" fill="#1E1A16"/>
+    <rect x="32" y="60" width="4" height="8" fill="#1E1A16"/><rect x="40" y="60" width="8" height="4" fill="#1E1A16"/>
+    <rect x="52" y="60" width="4" height="4" fill="#1E1A16"/><rect x="60" y="60" width="4" height="8" fill="#1E1A16"/>
+    <rect x="68" y="60" width="4" height="4" fill="#1E1A16"/><rect x="76" y="64" width="8" height="4" fill="#1E1A16"/>
+    <rect x="32" y="72" width="12" height="4" fill="#1E1A16"/><rect x="48" y="68" width="4" height="8" fill="#1E1A16"/>
+    <rect x="56" y="72" width="8" height="4" fill="#1E1A16"/><rect x="68" y="68" width="4" height="8" fill="#1E1A16"/>
+    <rect x="76" y="72" width="8" height="4" fill="#1E1A16"/>
+  </svg>`;
+}
+
+/* ── Helpers ─────────────────────────────── */
+function toggleUser() {
+  isLoggedIn = !isLoggedIn;
+  document.getElementById('devBadge').textContent = isLoggedIn ? 'ล็อกอินแล้ว' : 'Guest';
+  render();
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeIfBg(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal('eventModal'); document.getElementById('qrFull').classList.remove('open'); }
+});
+
+render();
+</script>
+</body>
+</html>
