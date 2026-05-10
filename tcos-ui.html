@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TCOS — Thecomingofstages</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <!-- Tabler Icons (outline) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/tabler-icons.min.css" />
+
+  <style>
+    /* ─── Reset & Base ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Brand */
+      --tcos-dark:        #2C2C2A;
+      --tcos-dark-hover:  #444441;
+      --tcos-gold:        #BA7517;
+      --tcos-gold-mid:    #EF9F27;
+      --tcos-gold-light:  #FAEEDA;
+
+      /* Neutrals */
+      --bg-page:          #F5F3EE;
+      --bg-surface:       #FFFFFF;
+      --bg-secondary:     #F1EFE8;
+      --border-light:     #E8E6E0;
+      --border-mid:       #D3D1C7;
+      --text-primary:     #2C2C2A;
+      --text-secondary:   #5F5E5A;
+      --text-hint:        #888780;
+
+      /* Status */
+      --green-bg:   #EAF3DE; --green-text:  #3B6D11;
+      --amber-bg:   #FAEEDA; --amber-text:  #854F0B;
+      --red-bg:     #FCEBEB; --red-text:    #A32D2D;
+      --blue-bg:    #E6F1FB; --blue-text:   #185FA5;
+      --purple-bg:  #EEEDFE; --purple-text: #3C3489;
+    }
+
+    html { font-size: 16px; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg-page);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    /* ─── Scrollbar ─────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 99px; }
+
+    /* ─── Typography helpers ────────────────────────────────────── */
+    .font-display { font-family: 'Playfair Display', serif; }
+
+    /* ─── Utility ───────────────────────────────────────────────── */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       NAV
+    ══════════════════════════════════════════════════════════════ */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 56px;
+      background: #fff;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .nav-logo-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--tcos-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--tcos-gold-mid);
+      flex-shrink: 0;
+    }
+    .nav-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    .nav-brand span { color: var(--tcos-gold); }
+
+    .nav-actions { display: flex; align-items: center; gap: 8px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 14px;
+      border-radius: 7px;
+      border: 1px solid var(--border-mid);
+      background: transparent;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: background .15s, border-color .15s, color .15s;
+      text-decoration: none;
+    }
+    .btn:hover { background: var(--bg-secondary); }
+
+    .btn-primary {
+      background: var(--tcos-dark);
+      color: var(--tcos-gold-mid);
+      border-color: var(--tcos-dark);
+    }
+    .btn-primary:hover { background: var(--tcos-dark-hover); }
+
+    .btn-block {
+      width: 100%;
+      justify-content: center;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       LAYOUT
+    ══════════════════════════════════════════════════════════════ */
+    .app-main {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      min-height: calc(100vh - 56px);
+    }
+
+    /* ─── Left Panel ────────────────────────────────────────────── */
+    .left-panel {
+      background: #fff;
+      border-right: 1px solid var(--border-light);
+      padding: 1.25rem;
+      overflow-y: auto;
+      position: sticky;
+      top: 56px;
+      height: calc(100vh - 56px);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* ─── Right Panel ───────────────────────────────────────────── */
+    .right-panel {
+      padding: 1.25rem;
+      overflow-y: auto;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       SECTION LABEL
+    ══════════════════════════════════════════════════════════════ */
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-hint);
+      margin-bottom: .55rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       USER CARD
+    ══════════════════════════════════════════════════════════════ */
+    .user-card {
+      background: var(--tcos-dark);
+      border-radius: 12px;
+      padding: 1.15rem;
+    }
+    .user-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--tcos-gold-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--tcos-dark);
+      margin-bottom: .75rem;
+    }
+    .user-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: #FAC775;
+      margin-bottom: 2px;
+    }
+    .user-nick { font-size: 12px; color: #888780; }
+
+    .user-meta {
+      margin-top: .75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .user-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #B4B2A9;
+    }
+    .user-meta-row i { font-size: 13px; color: var(--tcos-gold-mid); }
+
+    .user-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: .75rem;
+    }
+    .tag {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      background: var(--purple-bg);
+      color: var(--purple-text);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       QR SECTION
+    ══════════════════════════════════════════════════════════════ */
+    .qr-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .qr-box {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto .6rem;
+      background: #fff;
+      border-radius: 6px;
+      border: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qr-box svg { width: 88px; height: 88px; }
+    .qr-id {
+      font-size: 11px;
+      color: var(--text-hint);
+      font-family: monospace;
+      margin-bottom: .5rem;
+    }
+    .btn-qr-expand {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid var(--border-mid);
+      background: transparent;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      transition: background .15s;
+    }
+    .btn-qr-expand:hover { background: #fff; }
+
+    /* ══════════════════════════════════════════════════════════════
+       MY EVENTS LIST
+    ══════════════════════════════════════════════════════════════ */
+    .my-events { display: flex; flex-direction: column; gap: .45rem; }
+
+    .my-event-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: .7rem .8rem;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      cursor: pointer;
+      background: #fff;
+      transition: border-color .15s, background .15s;
+    }
+    .my-event-item:hover {
+      border-color: var(--border-mid);
+      background: var(--bg-secondary);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+    .dot-upcoming { background: var(--tcos-gold-mid); }
+    .dot-attended { background: #639922; }
+    .dot-missed   { background: #E24B4A; }
+
+    .my-event-info { flex: 1; min-width: 0; }
+    .my-event-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .my-event-date { font-size: 11px; color: var(--text-secondary); }
+
+    .status-badge {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 20px;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .status-upcoming { background: var(--amber-bg);  color: var(--amber-text); }
+    .status-attended { background: var(--green-bg);  color: var(--green-text); }
+    .status-missed   { background: var(--red-bg);    color: var(--red-text);   }
+
+    /* ══════════════════════════════════════════════════════════════
+       RIGHT PANEL — HEADER & FILTERS
+    ══════════════════════════════════════════════════════════════ */
+    .right-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: .9rem;
+    }
+    .right-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 1rem;
+    }
+    .filter-btn {
+      border: 1px solid var(--border-mid);
+      background: transparent;
+      padding: 5px 13px;
+      border-radius: 20px;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-family: 'DM Sans', sans-serif;
+      transition: all .15s;
+    }
+    .filter-btn.active {
+      background: var(--tcos-dark);
+      color: var(--tcos-gold-mid);
+      border-color: var(--tcos-dark);
+    }
+    .filter-btn:hover:not(.active) {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       EVENT CARDS GRID
+    ══════════════════════════════════════════════════════════════ */
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 1rem;
+    }
+
+    .event-card {
+      background: #fff;
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .2s, border-color .2s;
+    }
+    .event-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-mid);
+    }
+
+    /* Poster */
+    .event-poster {
+      height: 140px;
+      position: relative;
+      overflow: hidden;
+    }
+    .poster-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+    }
+    .poster-1 { background: linear-gradient(135deg, #2C2C2A 0%, #3C3489 100%); }
+    .poster-2 { background: linear-gradient(135deg, #0F6E56 0%, #1D9E75 100%); }
+    .poster-3 { background: linear-gradient(135deg, #993C1D 0%, #D85A30 100%); }
+    .poster-4 { background: linear-gradient(135deg, #185FA5 0%, #378ADD 100%); }
+    .poster-5 { background: linear-gradient(135deg, #993556 0%, #D4537E 100%); }
+
+    .event-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 10px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+    .badge-free { background: var(--green-bg); color: var(--green-text); }
+    .badge-paid { background: var(--amber-bg); color: var(--amber-text); }
+    .badge-full { background: var(--red-bg);   color: var(--red-text);   }
+
+    /* Card body */
+    .event-body { padding: .85rem; }
+    .event-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.35;
+      margin-bottom: .5rem;
+    }
+    .event-meta { display: flex; flex-direction: column; gap: 3px; margin-bottom: .7rem; }
+    .event-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+    .event-meta-row i { font-size: 12px; color: var(--tcos-gold); }
+
+    /* Footer */
+    .event-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .seat-wrap { flex: 1; }
+    .seat-label { font-size: 10px; color: var(--text-hint); margin-bottom: 3px; }
+    .seat-bar {
+      height: 4px;
+      background: var(--bg-secondary);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .seat-fill     { height: 100%; border-radius: 2px; background: var(--tcos-gold); }
+    .seat-fill-high { background: #E24B4A; }
+
+    .btn-register {
+      border: 1px solid var(--tcos-dark);
+      background: var(--tcos-dark);
+      padding: 5px 11px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      color: var(--tcos-gold-mid);
+      font-family: 'DM Sans', sans-serif;
+      white-space: nowrap;
+      transition: background .15s;
+    }
+    .btn-register:hover { background: var(--tcos-dark-hover); }
+
+    .btn-registered {
+      background: var(--green-bg);
+      color: var(--green-text);
+      border-color: #C0DD97;
+      cursor: default;
+    }
+    .btn-registered:hover { background: var(--green-bg); }
+
+    .btn-full {
+      background: var(--bg-secondary);
+      color: var(--text-hint);
+      border-color: var(--border-light);
+      cursor: not-allowed;
+    }
+    .btn-full:hover { background: var(--bg-secondary); }
+
+    /* ══════════════════════════════════════════════════════════════
+       MODAL OVERLAY
+    ══════════════════════════════════════════════════════════════ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .55);
+      z-index: 200;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+      overflow-y: auto;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: #fff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 640px;
+      margin: auto;
+      overflow: hidden;
+      border: 1px solid var(--border-light);
+    }
+
+    /* Modal poster */
+    .modal-poster {
+      height: 200px;
+      position: relative;
+      overflow: hidden;
+    }
+    .modal-poster .poster-placeholder { height: 200px; font-size: 52px; }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, .5);
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .modal-poster-badges {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      display: flex;
+      gap: 6px;
+    }
+    .poster-pill {
+      font-size: 12px;
+      padding: 3px 9px;
+      border-radius: 5px;
+      background: rgba(0, 0, 0, .6);
+      color: #fff;
+    }
+    .poster-pill-gold { color: var(--tcos-gold-mid); }
+
+    /* Modal body */
+    .modal-body { padding: 1.5rem; }
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: .4rem;
+    }
+    .modal-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Stats row */
+    .modal-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .75rem;
+      margin-bottom: 1.25rem;
+    }
+    .stat-card {
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: .75rem;
+      text-align: center;
+    }
+    .stat-val {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+    .stat-key { font-size: 11px; color: var(--text-secondary); }
+
+    /* Schedule */
+    .modal-section { margin-bottom: 1.25rem; }
+    .modal-section-title {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-hint);
+      margin-bottom: .6rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .schedule-row {
+      display: flex;
+      gap: .75rem;
+      align-items: flex-start;
+      padding: .75rem;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      margin-bottom: .45rem;
+    }
+    .schedule-date {
+      background: var(--tcos-dark);
+      color: var(--tcos-gold-mid);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 500;
+      text-align: center;
+      flex-shrink: 0;
+      min-width: 50px;
+    }
+    .schedule-time {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+    .schedule-venue { font-size: 12px; color: var(--text-secondary); }
+
+    /* ══════════════════════════════════════════════════════════════
+       REGISTRATION FORM (inside modal)
+    ══════════════════════════════════════════════════════════════ */
+    .reg-form {
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-top: .5rem;
+    }
+    .reg-form-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: .75rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Info banners */
+    .info-banner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: .65rem .85rem;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: .75rem;
+    }
+    .info-banner i { font-size: 16px; }
+    .info-banner-blue   { background: var(--blue-bg);  color: var(--blue-text);  }
+    .info-banner-green  { background: var(--green-bg); color: var(--green-text); }
+    .info-banner-red    { background: var(--red-bg);   color: var(--red-text);   }
+
+    /* Form grid */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .6rem;
+      margin-bottom: .6rem;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    .form-label { font-size: 12px; color: var(--text-secondary); }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      border: 1px solid var(--border-mid);
+      background: #fff;
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color .15s;
+      width: 100%;
+    }
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus { border-color: var(--tcos-gold); }
+
+    .form-input[readonly] {
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      cursor: default;
+    }
+    .form-textarea { resize: none; height: 72px; }
+
+    .login-hint {
+      font-size: 12px;
+      color: var(--text-hint);
+      text-align: center;
+      margin-top: .5rem;
+    }
+    .login-hint span {
+      color: var(--tcos-gold);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       AUTH MODAL
+    ══════════════════════════════════════════════════════════════ */
+    .auth-modal-header {
+      padding: 1.25rem 1.5rem .75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .auth-modal-header-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .btn-icon {
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      border-radius: 6px;
+      transition: background .15s;
+    }
+    .btn-icon:hover { background: var(--bg-secondary); }
+
+    .auth-tabs { display: flex; border-bottom: 1px solid var(--border-light); }
+    .auth-tab {
+      flex: 1;
+      padding: .75rem;
+      text-align: center;
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      border-bottom: 2px solid transparent;
+      transition: all .15s;
+    }
+    .auth-tab.active {
+      color: var(--text-primary);
+      border-bottom-color: var(--tcos-gold);
+      font-weight: 500;
+    }
+
+    .auth-form { padding: 1.25rem 1.5rem 1.5rem; }
+
+    /* Interest chips */
+    .interest-grid { display: flex; flex-wrap: wrap; gap: 5px; }
+    .interest-chip {
+      border: 1px solid var(--border-mid);
+      background: transparent;
+      padding: 4px 11px;
+      border-radius: 20px;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-family: 'DM Sans', sans-serif;
+      transition: all .15s;
+    }
+    .interest-chip.selected {
+      background: var(--tcos-dark);
+      color: var(--tcos-gold-mid);
+      border-color: var(--tcos-dark);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       QR FULLSCREEN OVERLAY
+    ══════════════════════════════════════════════════════════════ */
+    .qr-fullscreen {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.85);
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .qr-fullscreen.open { display: flex; }
+    .qr-fullscreen-box {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 16px;
+      text-align: center;
+    }
+    .qr-fullscreen-box svg { width: 240px; height: 240px; display: block; }
+    .qr-fullscreen-id {
+      margin-top: .75rem;
+      font-family: monospace;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .qr-fullscreen-close {
+      border: 1px solid rgba(255,255,255,.25);
+      background: transparent;
+      color: #fff;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .qr-fullscreen-close:hover { background: rgba(255,255,255,.1); }
+
+    /* ══════════════════════════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .app-main {
+        grid-template-columns: 1fr;
+      }
+      .left-panel {
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border-light);
+      }
+      .events-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 520px) {
+      .events-grid { grid-template-columns: 1fr; }
+      .modal-stats { grid-template-columns: 1fr 1fr; }
+      .form-row    { grid-template-columns: 1fr; }
+      .nav-brand   { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     NAV
+═══════════════════════════════════════════════ -->
+<nav class="nav">
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-mark">TC</div>
+    <span class="nav-brand">the<span>coming</span>ofstages</span>
+  </a>
+  <div class="nav-actions">
+    <button class="btn" onclick="openAuth('login')">
+      <i class="ti ti-login" aria-hidden="true"></i> Sign in
+    </button>
+    <button class="btn btn-primary" onclick="openAuth('register')">
+      Create Account
+    </button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════
+     MAIN LAYOUT
+═══════════════════════════════════════════════ -->
+<div class="app-main">
+
+  <!-- ── LEFT PANEL ─────────────────────────────── -->
+  <aside class="left-panel">
+
+    <!-- User card -->
+    <div>
+      <div class="user-card">
+        <div class="user-avatar">พ</div>
+        <div class="user-name">พิมพ์ชนก ไชยสิทธิ์</div>
+        <div class="user-nick">Pim · หญิง</div>
+        <div class="user-meta">
+          <div class="user-meta-row">
+            <i class="ti ti-phone" aria-hidden="true"></i>089-234-5678
+          </div>
+          <div class="user-meta-row">
+            <i class="ti ti-mail" aria-hidden="true"></i>pim@email.com
+          </div>
+        </div>
+        <div class="user-tags">
+          <span class="tag">ดนตรี</span>
+          <span class="tag">ศิลปะ</span>
+          <span class="tag">อาหาร</span>
+          <span class="tag">ถ่ายภาพ</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- QR Code -->
+    <div>
+      <div class="section-label">
+        <i class="ti ti-qrcode" aria-hidden="true"></i> QR สำหรับเช็คชื่อ
+      </div>
+      <div class="qr-card">
+        <div class="qr-box">
+          <svg viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="QR Code">
+            <rect width="88" height="88" fill="white"/>
+            <!-- Top-left finder -->
+            <rect x="4" y="4" width="24" height="24" rx="2" fill="#2C2C2A"/>
+            <rect x="8" y="8" width="16" height="16" rx="1" fill="white"/>
+            <rect x="12" y="12" width="8" height="8" fill="#2C2C2A"/>
+            <!-- Top-right finder -->
+            <rect x="60" y="4" width="24" height="24" rx="2" fill="#2C2C2A"/>
+            <rect x="64" y="8" width="16" height="16" rx="1" fill="white"/>
+            <rect x="68" y="12" width="8" height="8" fill="#2C2C2A"/>
+            <!-- Bottom-left finder -->
+            <rect x="4" y="60" width="24" height="24" rx="2" fill="#2C2C2A"/>
+            <rect x="8" y="64" width="16" height="16" rx="1" fill="white"/>
+            <rect x="12" y="68" width="8" height="8" fill="#2C2C2A"/>
+            <!-- Data modules -->
+            <rect x="32" y="4"  width="4" height="4" fill="#2C2C2A"/>
+            <rect x="40" y="4"  width="4" height="4" fill="#2C2C2A"/>
+            <rect x="48" y="4"  width="8" height="4" fill="#2C2C2A"/>
+            <rect x="32" y="12" width="8" height="4" fill="#2C2C2A"/>
+            <rect x="48" y="12" width="4" height="4" fill="#2C2C2A"/>
+            <rect x="32" y="20" width="4" height="8" fill="#2C2C2A"/>
+            <rect x="40" y="20" width="8" height="4" fill="#2C2C2A"/>
+            <rect x="4"  y="32" width="4" height="8" fill="#2C2C2A"/>
+            <rect x="12" y="32" width="8" height="4" fill="#2C2C2A"/>
+            <rect x="24" y="32" width="4" height="4" fill="#2C2C2A"/>
+            <rect x="32" y="32" width="12" height="4" fill="#2C2C2A"/>
+            <rect x="48" y="32" width="4" height="8" fill="#2C2C2A"/>
+            <rect x="56" y="32" width="8" height="4" fill="#2C2C2A"/>
+            <rect x="68" y="32" width="4" height="4" fill="#2C2C2A"/>
+            <rect x="76" y="32" width="8" height="8" fill="#2C2C2A"/>
+            <rect x="4"  y="40" width="8" height="4" fill="#2C2C2A"/>
+            <rect x="20" y="40" width="8" height="4" fill="#2C2C2A"/>
+            <rect x="32" y="40" width="4" height="4" fill="#2C2C2A"/>
+            <rect x="40" y="40" width="12" height="8" fill="#2C2C2A"/>
+            <rect x="56" y="40" width="4" height="4" fill="#2C2C2A"/>
+            <rect x="64" y="40" width="8" height="4" fill="#2C2C2A"/>
+            <rect x="76" y="40" width="4" height="4" fill="#2C2C2A"/>
+            <rect x="4"  y="48" width="4" height="8" fill="#2C2C2A"/>
+            <rect x="12" y="52" width="4" height="4" fill="#2C2C2A"/>
+            <rect x="20" y="48" width="8" height="8" fill="#2C2C2A"/>
+            <rect x="32" y="52" width="8" height="4" fill="#2C2C2A"/>
+            <rect x="44" y="52" width="4" height="4" fill="#2C2C2A"/>
+            <rect x="56" y="48" width="4" height="4" fill="#2C2C2A"/>
+            <rect x="64" y="52" width="16" height="4" fill="#2C2C2A"/>
+            <rect x="32" y="60" width="4" height="8" fill="#2C2C2A"/>
+            <rect x="40" y="60" width="8" height="4" fill="#2C2C2A"/>
+            <rect x="52" y="60" width="4" height="4" fill="#2C2C2A"/>
+            <rect x="60" y="60" width="4" height="8" fill="#2C2C2A"/>
+            <rect x="68" y="60" width="4" height="4" fill="#2C2C2A"/>
+            <rect x="76" y="64" width="8" height="4" fill="#2C2C2A"/>
+            <rect x="32" y="72" width="12" height="4" fill="#2C2C2A"/>
+            <rect x="48" y="68" width="4" height="8" fill="#2C2C2A"/>
+            <rect x="56" y="72" width="8" height="4" fill="#2C2C2A"/>
+            <rect x="68" y="68" width="4" height="8" fill="#2C2C2A"/>
+            <rect x="76" y="72" width="8" height="4" fill="#2C2C2A"/>
+          </svg>
+        </div>
+        <div class="qr-id">TCOS-U-2025-04829</div>
+        <button class="btn-qr-expand" onclick="document.getElementById('qrFullscreen').classList.add('open')">
+          <i class="ti ti-maximize" aria-hidden="true"></i> ขยาย QR
+        </button>
+      </div>
+    </div>
+
+    <!-- My Events -->
+    <div>
+      <div class="section-label">
+        <i class="ti ti-calendar-check" aria-hidden="true"></i> กิจกรรมของฉัน
+      </div>
+      <div class="my-events">
+        <div class="my-event-item" onclick="openEvent(0)">
+          <div class="status-dot dot-upcoming"></div>
+          <div class="my-event-info">
+            <div class="my-event-name">Bangkok Jazz Night vol.3</div>
+            <div class="my-event-date">18 พ.ค. 2025 · ลาดพร้าว</div>
+          </div>
+          <span class="status-badge status-upcoming">รอเข้าร่วม</span>
+        </div>
+        <div class="my-event-item">
+          <div class="status-dot dot-attended"></div>
+          <div class="my-event-info">
+            <div class="my-event-name">Street Art Workshop #5</div>
+            <div class="my-event-date">2 เม.ย. 2025 · สยาม</div>
+          </div>
+          <span class="status-badge status-attended">เข้าร่วมแล้ว</span>
+        </div>
+        <div class="my-event-item">
+          <div class="status-dot dot-missed"></div>
+          <div class="my-event-info">
+            <div class="my-event-name">Food Fest: Thai Street Eats</div>
+            <div class="my-event-date">10 มี.ค. 2025 · จตุจักร</div>
+          </div>
+          <span class="status-badge status-missed">ไม่ได้เข้าร่วม</span>
+        </div>
+        <div class="my-event-item" onclick="openEvent(2)">
+          <div class="status-dot dot-upcoming"></div>
+          <div class="my-event-info">
+            <div class="my-event-name">Indie Film Screening Night</div>
+            <div class="my-event-date">25 พ.ค. 2025 · อารีย์</div>
+          </div>
+          <span class="status-badge status-upcoming">รอเข้าร่วม</span>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ── RIGHT PANEL ────────────────────────────── -->
+  <main class="right-panel">
+    <div class="right-header">
+      <h1 class="right-title">กิจกรรมทั้งหมด</h1>
+    </div>
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-btn active" data-filter="all">ทั้งหมด</button>
+      <button class="filter-btn" data-filter="ดนตรี">ดนตรี</button>
+      <button class="filter-btn" data-filter="ศิลปะ">ศิลปะ</button>
+      <button class="filter-btn" data-filter="อาหาร">อาหาร</button>
+      <button class="filter-btn" data-filter="ภาพยนตร์">ภาพยนตร์</button>
+      <button class="filter-btn" data-filter="Workshop">Workshop</button>
+      <button class="filter-btn" data-filter="free">เข้าฟรี</button>
+    </div>
+    <div class="events-grid" id="eventsGrid"></div>
+  </main>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     EVENT DETAIL MODAL
+═══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="eventModal" onclick="closeIfOverlay(event,'eventModal')">
+  <div class="modal" id="eventModalContent" role="dialog" aria-modal="true" aria-label="รายละเอียดกิจกรรม"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     AUTH MODAL
+═══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="authModal" onclick="closeIfOverlay(event,'authModal')">
+  <div class="modal" id="authModalContent" role="dialog" aria-modal="true" aria-label="เข้าสู่ระบบ / สร้างบัญชี"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     QR FULLSCREEN
+═══════════════════════════════════════════════ -->
+<div class="qr-fullscreen" id="qrFullscreen" onclick="this.classList.remove('open')">
+  <div class="qr-fullscreen-box" onclick="event.stopPropagation()">
+    <svg viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="88" height="88" fill="white"/>
+      <rect x="4" y="4" width="24" height="24" rx="2" fill="#2C2C2A"/>
+      <rect x="8" y="8" width="16" height="16" rx="1" fill="white"/>
+      <rect x="12" y="12" width="8" height="8" fill="#2C2C2A"/>
+      <rect x="60" y="4" width="24" height="24" rx="2" fill="#2C2C2A"/>
+      <rect x="64" y="8" width="16" height="16" rx="1" fill="white"/>
+      <rect x="68" y="12" width="8" height="8" fill="#2C2C2A"/>
+      <rect x="4" y="60" width="24" height="24" rx="2" fill="#2C2C2A"/>
+      <rect x="8" y="64" width="16" height="16" rx="1" fill="white"/>
+      <rect x="12" y="68" width="8" height="8" fill="#2C2C2A"/>
+      <rect x="32" y="4" width="4" height="4" fill="#2C2C2A"/>
+      <rect x="40" y="4" width="4" height="4" fill="#2C2C2A"/>
+      <rect x="48" y="4" width="8" height="4" fill="#2C2C2A"/>
+      <rect x="32" y="12" width="8" height="4" fill="#2C2C2A"/>
+      <rect x="48" y="12" width="4" height="4" fill="#2C2C2A"/>
+      <rect x="32" y="20" width="4" height="8" fill="#2C2C2A"/>
+      <rect x="40" y="20" width="8" height="4" fill="#2C2C2A"/>
+      <rect x="4" y="32" width="4" height="8" fill="#2C2C2A"/>
+      <rect x="12" y="32" width="8" height="4" fill="#2C2C2A"/>
+      <rect x="24" y="32" width="4" height="4" fill="#2C2C2A"/>
+      <rect x="32" y="32" width="12" height="4" fill="#2C2C2A"/>
+      <rect x="48" y="32" width="4" height="8" fill="#2C2C2A"/>
+      <rect x="56" y="32" width="8" height="4" fill="#2C2C2A"/>
+      <rect x="68" y="32" width="4" height="4" fill="#2C2C2A"/>
+      <rect x="76" y="32" width="8" height="8" fill="#2C2C2A"/>
+      <rect x="4" y="40" width="8" height="4" fill="#2C2C2A"/>
+      <rect x="20" y="40" width="8" height="4" fill="#2C2C2A"/>
+      <rect x="32" y="40" width="4" height="4" fill="#2C2C2A"/>
+      <rect x="40" y="40" width="12" height="8" fill="#2C2C2A"/>
+      <rect x="56" y="40" width="4" height="4" fill="#2C2C2A"/>
+      <rect x="64" y="40" width="8" height="4" fill="#2C2C2A"/>
+      <rect x="76" y="40" width="4" height="4" fill="#2C2C2A"/>
+      <rect x="4" y="48" width="4" height="8" fill="#2C2C2A"/>
+      <rect x="12" y="52" width="4" height="4" fill="#2C2C2A"/>
+      <rect x="20" y="48" width="8" height="8" fill="#2C2C2A"/>
+      <rect x="32" y="52" width="8" height="4" fill="#2C2C2A"/>
+      <rect x="44" y="52" width="4" height="4" fill="#2C2C2A"/>
+      <rect x="56" y="48" width="4" height="4" fill="#2C2C2A"/>
+      <rect x="64" y="52" width="16" height="4" fill="#2C2C2A"/>
+      <rect x="32" y="60" width="4" height="8" fill="#2C2C2A"/>
+      <rect x="40" y="60" width="8" height="4" fill="#2C2C2A"/>
+      <rect x="52" y="60" width="4" height="4" fill="#2C2C2A"/>
+      <rect x="60" y="60" width="4" height="8" fill="#2C2C2A"/>
+      <rect x="68" y="60" width="4" height="4" fill="#2C2C2A"/>
+      <rect x="76" y="64" width="8" height="4" fill="#2C2C2A"/>
+      <rect x="32" y="72" width="12" height="4" fill="#2C2C2A"/>
+      <rect x="48" y="68" width="4" height="8" fill="#2C2C2A"/>
+      <rect x="56" y="72" width="8" height="4" fill="#2C2C2A"/>
+      <rect x="68" y="68" width="4" height="8" fill="#2C2C2A"/>
+      <rect x="76" y="72" width="8" height="4" fill="#2C2C2A"/>
+    </svg>
+    <div class="qr-fullscreen-id">TCOS-U-2025-04829</div>
+  </div>
+  <button class="qr-fullscreen-close">
+    <i class="ti ti-x" aria-hidden="true"></i> ปิด
+  </button>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════ -->
+<script>
+/* ── Data ───────────────────────────────────── */
+const EVENTS = [
+  {
+    title: "Bangkok Jazz Night vol.3",
+    cat: "ดนตรี", posterClass: "poster-1", emoji: "♪",
+    price: 250, seats: 200, registered: 178, free: false,
+    date: "18 พ.ค. 2025", time: "19:00–23:00",
+    venue: "The Jam Factory, ลาดพร้าว",
+    desc: "คืนแห่งดนตรี Jazz สดสุดพิเศษกับศิลปิน 3 วง จากทั้งไทยและต่างประเทศ บรรยากาศอบอุ่น เหมาะสำหรับทั้งผู้ที่รักดนตรีและผู้มาใหม่",
+    schedule: [
+      { date: "18 พ.ค.", time: "19:00–21:00", venue: "The Jam Factory Main Stage, ลาดพร้าว" },
+      { date: "18 พ.ค.", time: "21:00–23:00", venue: "Rooftop Lounge, ลาดพร้าว" }
+    ],
+    questions: ["คุณเคยเข้าร่วมงาน Jazz Night มาก่อนหรือไม่?", "คุณสนใจ Workshop ดนตรีเพิ่มเติมมั้ย?"],
+    myEvent: true
+  },
+  {
+    title: "Street Art Workshop #6",
+    cat: "ศิลปะ", posterClass: "poster-2", emoji: "🎨",
+    price: 0, seats: 40, registered: 23, free: true,
+    date: "22 พ.ค. 2025", time: "13:00–17:00",
+    venue: "BACC หอศิลปวัฒนธรรม, สยาม",
+    desc: "Workshop วาดภาพ Street Art สำหรับทุกระดับ เรียนรู้เทคนิค Stencil และ Spray ไปพร้อมกับศิลปินระดับมืออาชีพ ไม่ต้องมีพื้นฐาน",
+    schedule: [
+      { date: "22 พ.ค.", time: "13:00–17:00", venue: "BACC ชั้น 1, สยาม" }
+    ],
+    questions: ["ระดับทักษะการวาดภาพของคุณ?", "คุณมีอุปกรณ์ของตัวเองหรือไม่?"],
+    myEvent: false
+  },
+  {
+    title: "Indie Film Screening Night",
+    cat: "ภาพยนตร์", posterClass: "poster-4", emoji: "🎬",
+    price: 150, seats: 80, registered: 80, free: false,
+    date: "25 พ.ค. 2025", time: "18:00–22:00",
+    venue: "Doc Club & Pub, อารีย์",
+    desc: "คืนฉายหนัง Indie สุดพิเศษรวม 3 เรื่องสั้นและ 1 เรื่องยาว พร้อม Q&A กับผู้กำกับหลังฉาย",
+    schedule: [
+      { date: "25 พ.ค.", time: "18:00–22:00", venue: "Doc Club & Pub, อารีย์" }
+    ],
+    questions: ["แนวหนังที่คุณชอบ?"],
+    myEvent: true
+  },
+  {
+    title: "Thai Street Food Fest",
+    cat: "อาหาร", posterClass: "poster-3", emoji: "🍜",
+    price: 0, seats: 500, registered: 312, free: true,
+    date: "1 มิ.ย. 2025", time: "10:00–20:00",
+    venue: "สวนลุมพินี กรุงเทพ",
+    desc: "เทศกาลอาหารริมทางที่ใหญ่ที่สุดในกรุงเทพ รวบรวมร้านอาหารชื่อดังจากทั่วไทย กว่า 50 ร้าน พร้อมโซน Live Cooking",
+    schedule: [
+      { date: "1 มิ.ย.", time: "10:00–20:00", venue: "สวนลุมพินี โซน A" },
+      { date: "2 มิ.ย.", time: "10:00–18:00", venue: "สวนลุมพินี โซน B" }
+    ],
+    questions: ["คุณมีอาหารที่แพ้หรือไม่?", "คุณสนใจ Zone ไหนมากที่สุด?"],
+    myEvent: false
+  },
+  {
+    title: "Photography Walk: Old Town",
+    cat: "ศิลปะ", posterClass: "poster-5", emoji: "📷",
+    price: 200, seats: 25, registered: 19, free: false,
+    date: "7 มิ.ย. 2025", time: "06:00–10:00",
+    venue: "เยาวราช–พระนคร",
+    desc: "เดินถ่ายภาพย่านเก่าแก่ของกรุงเทพยามเช้า กับช่างภาพมืออาชีพที่จะพาเข้าถึงมุมที่ไม่มีใครเคยเห็น",
+    schedule: [
+      { date: "7 มิ.ย.", time: "06:00–08:00", venue: "เยาวราช" },
+      { date: "7 มิ.ย.", time: "08:00–10:00", venue: "วังเก่า พระนคร" }
+    ],
+    questions: ["กล้องที่คุณใช้คือรุ่นอะไร?", "ระดับประสบการณ์การถ่ายภาพ?"],
+    myEvent: false
+  }
+];
+
+const INTERESTS = ['ดนตรี','ศิลปะ','อาหาร','ถ่ายภาพ','ภาพยนตร์','Workshop','กีฬา','เทคโนโลยี','แฟชั่น','อื่นๆ'];
+
+/* ── Render event cards ─────────────────────── */
+function renderEvents(filter) {
+  const grid = document.getElementById('eventsGrid');
+  const list = filter === 'all'   ? EVENTS
+             : filter === 'free'  ? EVENTS.filter(e => e.free)
+             : EVENTS.filter(e => e.cat === filter);
+
+  grid.innerHTML = list.map((e, i) => {
+    const idx    = EVENTS.indexOf(e);
+    const pct    = Math.round(e.registered / e.seats * 100);
+    const isFull = e.registered >= e.seats;
+
+    const badge = e.free
+      ? '<span class="event-badge badge-free">ฟรี</span>'
+      : isFull
+        ? '<span class="event-badge badge-full">เต็ม</span>'
+        : `<span class="event-badge badge-paid">฿${e.price}</span>`;
+
+    const btn = e.myEvent
+      ? '<button class="btn-register btn-registered" disabled><i class="ti ti-check" aria-hidden="true"></i> ลงทะเบียนแล้ว</button>'
+      : isFull
+        ? '<button class="btn-register btn-full" disabled>เต็มแล้ว</button>'
+        : `<button class="btn-register" onclick="event.stopPropagation();openEvent(${idx})">ลงทะเบียน</button>`;
+
+    return `
+      <div class="event-card" onclick="openEvent(${idx})" tabindex="0" role="button" aria-label="${e.title}">
+        <div class="event-poster">
+          <div class="poster-placeholder ${e.posterClass}">${e.emoji}</div>
+          ${badge}
+        </div>
+        <div class="event-body">
+          <div class="event-title">${e.title}</div>
+          <div class="event-meta">
+            <div class="event-meta-row"><i class="ti ti-calendar" aria-hidden="true"></i>${e.date}</div>
+            <div class="event-meta-row"><i class="ti ti-clock"    aria-hidden="true"></i>${e.time}</div>
+            <div class="event-meta-row"><i class="ti ti-map-pin"  aria-hidden="true"></i>${e.venue}</div>
+          </div>
+          <div class="event-footer">
+            <div class="seat-wrap">
+              <div class="seat-label">${e.registered}/${e.seats} ที่นั่ง</div>
+              <div class="seat-bar">
+                <div class="${pct > 80 ? 'seat-fill seat-fill-high' : 'seat-fill'}" style="width:${pct}%"></div>
+              </div>
+            </div>
+            ${btn}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+/* ── Filter bar ─────────────────────────────── */
+document.getElementById('filterBar').addEventListener('click', function(e) {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  this.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderEvents(btn.dataset.filter);
+});
+
+/* ── Open event detail ──────────────────────── */
+function openEvent(idx) {
+  const e      = EVENTS[idx];
+  const pct    = Math.round(e.registered / e.seats * 100);
+  const isFull = e.registered >= e.seats;
+
+  const scheduleHTML = e.schedule.map(s => `
+    <div class="schedule-row">
+      <div class="schedule-date">${s.date}</div>
+      <div>
+        <div class="schedule-time">${s.time}</div>
+        <div class="schedule-venue"><i class="ti ti-map-pin" aria-hidden="true" style="font-size:11px"></i> ${s.venue}</div>
+      </div>
+    </div>`).join('');
+
+  let regSection;
+  if (isFull) {
+    regSection = `<div class="info-banner info-banner-red"><i class="ti ti-alert-circle" aria-hidden="true"></i>กิจกรรมนี้เต็มแล้ว ขออภัยในความไม่สะดวก</div>`;
+  } else if (e.myEvent) {
+    regSection = `<div class="info-banner info-banner-green"><i class="ti ti-circle-check" aria-hidden="true"></i>คุณลงทะเบียนกิจกรรมนี้แล้ว ดู QR Code ในแผงบัญชีของคุณ</div>`;
+  } else {
+    const extraQ = e.questions.map(q => `
+      <div class="form-group full" style="margin-bottom:.6rem">
+        <label class="form-label">${q}</label>
+        <textarea class="form-textarea" placeholder="กรอกคำตอบ..."></textarea>
+      </div>`).join('');
+
+    const payRow = !e.free ? `
+      <div class="form-group full" style="margin-bottom:.75rem">
+        <label class="form-label">วิธีชำระเงิน (฿${e.price})</label>
+        <select class="form-select">
+          <option>PromptPay / QR Code</option>
+          <option>บัตรเครดิต/เดบิต</option>
+          <option>โอนธนาคาร</option>
+        </select>
+      </div>` : '';
+
+    regSection = `
+      <div class="reg-form">
+        <div class="reg-form-title"><i class="ti ti-user-check" aria-hidden="true"></i> ลงทะเบียนเข้าร่วม</div>
+        <div class="info-banner info-banner-blue"><i class="ti ti-info-circle" aria-hidden="true"></i>ข้อมูลด้านล่างเติมมาจากบัญชี TCOS ของคุณแล้ว</div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">ชื่อ</label><input class="form-input" value="พิมพ์ชนก" readonly></div>
+          <div class="form-group"><label class="form-label">นามสกุล</label><input class="form-input" value="ไชยสิทธิ์" readonly></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">ชื่อเล่น</label><input class="form-input" value="Pim" readonly></div>
+          <div class="form-group"><label class="form-label">เบอร์โทร</label><input class="form-input" value="089-234-5678" readonly></div>
+        </div>
+        ${extraQ}
+        ${payRow}
+        <button class="btn btn-primary btn-block">
+          <i class="ti ti-check" aria-hidden="true"></i>
+          ยืนยันการลงทะเบียน${!e.free ? ' (฿' + e.price + ')' : ' (ฟรี)'}
+        </button>
+        <div class="login-hint">ยังไม่มีบัญชี? <span onclick="openAuth('register')">สร้างบัญชี TCOS</span> เพื่อลงทะเบียนได้เลย</div>
+      </div>`;
+  }
+
+  document.getElementById('eventModalContent').innerHTML = `
+    <div class="modal-poster">
+      <div class="poster-placeholder ${e.posterClass}" style="height:200px;font-size:52px">${e.emoji}</div>
+      <button class="modal-close" onclick="closeModal('eventModal')" aria-label="ปิด">
+        <i class="ti ti-x" aria-hidden="true"></i>
+      </button>
+      <div class="modal-poster-badges">
+        <span class="poster-pill">${e.cat}</span>
+        <span class="poster-pill poster-pill-gold">${e.free ? 'ฟรี' : '฿' + e.price}</span>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-title">${e.title}</div>
+      <p class="modal-desc">${e.desc}</p>
+      <div class="modal-stats">
+        <div class="stat-card"><div class="stat-val">${e.seats}</div><div class="stat-key">ที่นั่งทั้งหมด</div></div>
+        <div class="stat-card"><div class="stat-val">${e.registered}</div><div class="stat-key">ลงทะเบียนแล้ว</div></div>
+        <div class="stat-card"><div class="stat-val">${e.seats - e.registered}</div><div class="stat-key">ที่นั่งเหลือ</div></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-calendar" aria-hidden="true"></i> ตารางกิจกรรม</div>
+        ${scheduleHTML}
+      </div>
+      ${regSection}
+    </div>`;
+
+  document.getElementById('eventModal').classList.add('open');
+}
+
+/* ── Auth modal ─────────────────────────────── */
+function openAuth(tab) {
+  renderAuth(tab);
+  document.getElementById('authModal').classList.add('open');
+}
+
+function renderAuth(tab) {
+  const interestChips = INTERESTS.map(t =>
+    `<button type="button" class="interest-chip" onclick="this.classList.toggle('selected')">${t}</button>`
+  ).join('');
+
+  const loginForm = `
+    <div class="auth-form">
+      <div class="form-group" style="margin-bottom:.75rem">
+        <label class="form-label">E-mail</label>
+        <input class="form-input" type="email" placeholder="your@email.com">
+      </div>
+      <div class="form-group" style="margin-bottom:.85rem">
+        <label class="form-label">รหัสผ่าน</label>
+        <input class="form-input" type="password" placeholder="••••••••">
+      </div>
+      <button class="btn btn-primary btn-block" style="margin-bottom:.5rem">
+        <i class="ti ti-login" aria-hidden="true"></i> เข้าสู่ระบบ
+      </button>
+      <div class="login-hint">ยังไม่มีบัญชี? <span onclick="renderAuth('register');switchAuthTab('register')">สร้างบัญชีใหม่</span></div>
+    </div>`;
+
+  const registerForm = `
+    <div class="auth-form">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">ชื่อ</label><input class="form-input" placeholder="ชื่อจริง"></div>
+        <div class="form-group"><label class="form-label">นามสกุล</label><input class="form-input" placeholder="นามสกุล"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">ชื่อเล่น</label><input class="form-input" placeholder="ชื่อเล่น"></div>
+        <div class="form-group">
+          <label class="form-label">เพศ</label>
+          <select class="form-select">
+            <option>ชาย</option><option>หญิง</option><option>LGBTQ+</option><option>ไม่ระบุ</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">เบอร์โทร</label><input class="form-input" placeholder="08X-XXX-XXXX"></div>
+        <div class="form-group"><label class="form-label">E-mail</label><input class="form-input" type="email" placeholder="your@email.com"></div>
+      </div>
+      <div class="form-group full" style="margin-bottom:.75rem">
+        <label class="form-label">รหัสผ่าน</label>
+        <input class="form-input" type="password" placeholder="อย่างน้อย 8 ตัวอักษร">
+      </div>
+      <div class="form-group full" style="margin-bottom:.85rem">
+        <label class="form-label">ความสนใจ (ไม่บังคับ)</label>
+        <div class="interest-grid">${interestChips}</div>
+      </div>
+      <button class="btn btn-primary btn-block" style="margin-bottom:.5rem">
+        <i class="ti ti-user-plus" aria-hidden="true"></i> สร้างบัญชี TCOS
+      </button>
+      <div class="login-hint">มีบัญชีแล้ว? <span onclick="renderAuth('login');switchAuthTab('login')">เข้าสู่ระบบ</span></div>
+    </div>`;
+
+  document.getElementById('authModalContent').innerHTML = `
+    <div class="auth-modal-header">
+      <span class="font-display auth-modal-header-title">TCOS Account</span>
+      <button class="btn-icon" onclick="closeModal('authModal')" aria-label="ปิด">
+        <i class="ti ti-x" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="auth-tabs">
+      <div class="auth-tab ${tab === 'login' ? 'active' : ''}" id="authTabLogin" onclick="renderAuth('login');switchAuthTab('login')">เข้าสู่ระบบ</div>
+      <div class="auth-tab ${tab === 'register' ? 'active' : ''}" id="authTabRegister" onclick="renderAuth('register');switchAuthTab('register')">สร้างบัญชีใหม่</div>
+    </div>
+    <div id="authFormWrap">${tab === 'login' ? loginForm : registerForm}</div>`;
+}
+
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  const el = document.getElementById(tab === 'login' ? 'authTabLogin' : 'authTabRegister');
+  if (el) el.classList.add('active');
+  const wrap = document.getElementById('authFormWrap');
+  // re-render form in place without full modal rebuild
+}
+
+/* ── Modal helpers ──────────────────────────── */
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function closeIfOverlay(e, id) {
+  if (e.target === document.getElementById(id)) closeModal(id);
+}
+
+/* ── Keyboard close ─────────────────────────── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    ['eventModal','authModal'].forEach(closeModal);
+    document.getElementById('qrFullscreen').classList.remove('open');
+  }
+});
+
+/* ── Init ───────────────────────────────────── */
+renderEvents('all');
+</script>
+</body>
+</html>
